@@ -44,12 +44,22 @@ $ft-height: 600px + $gutter * 3;
 
   mat-grid-list {
     display: block;
+    position: relative;
 
     &.main {
       margin-top: $tb-height;
 
-      #map {
-        display: block;
+      div {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 1000px;
+        width: 8000px;
+        transform: translateX(3900px);
+
+        #map {
+          display: block;
+        }
       }
 
       mat-grid-tile {
