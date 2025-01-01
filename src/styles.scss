@@ -3,7 +3,98 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+$tb-height: 80px;
+$gutter: 20px;
+$ft-height: 600px + $gutter * 3;
 
-.mapboxgl-canvas {
-  // transform: translateX(-500px);
+app-root {
+  height: 100%;
+  display: block;
+
+  mat-toolbar {
+    &.header {
+      height: $tb-height;
+      z-index: 1000;
+      top: 0;
+      left: 0;
+      position: fixed;
+
+      .appbar-spacer {
+        flex: 1 1 auto;
+      }
+
+      .logo {
+        width: 150px;
+        position: relative;
+        left: -40px;
+      }
+    }
+
+    &.footer {
+      padding: 0;
+      height: $ft-height;
+      display: block;
+      overflow: hidden;
+      position: relative;
+
+      .logo {
+        z-index: 500;
+        position: absolute;
+        top: -40px;
+        left: -40px;
+        width: 200px;
+      }
+    }
+  }
+
+  mat-grid-list {
+    display: block;
+    position: relative;
+
+    &.main {
+      margin-top: $tb-height;
+
+      #map {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 1000px;
+        width: 8000px;
+        transform: translateX(3900px);
+
+        // style is from https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/
+        .marker {
+          background-image: url("https://docs.mapbox.com/help/demos/custom-markers-gl-js/mapbox-icon.png");
+          background-size: cover;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+      }
+
+      mat-grid-tile {
+        // background: lightblue;
+      }
+    }
+
+    &.footer-grid {
+      .founder {
+        .img-container {
+          border-radius: 50%;
+          overflow: hidden;
+          height: 150px;
+          width: 150px;
+          margin-right: 20px;
+
+          img {
+          }
+        }
+      }
+
+      mat-grid-tile {
+        // background: lightgrey;
+      }
+    }
+  }
 }
