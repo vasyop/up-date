@@ -33,7 +33,7 @@ export class AppComponent {
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v11',
-      center: [25, 45],
+      center: [70, 45],
       zoom: 3,
     });
 
@@ -42,7 +42,7 @@ export class AppComponent {
     const el = document.createElement('div');
     el.className = 'marker';
 
-    new mapboxgl.Marker(el).setLngLat([25, 45]).addTo(map);
+    new mapboxgl.Marker(el).setLngLat([25, 46.5]).addTo(map);
 
     let dragging = false;
     map.on('mousedown', () => {
@@ -57,7 +57,7 @@ export class AppComponent {
 
     function pan() {
       const duration = 10;
-      const deltaDistance = 25;
+      const deltaDistance = 10;
 
       function easing(t: number) {
         return t * (2 - t);

@@ -1,5 +1,5 @@
 <mat-toolbar class="header">
-  <img draggable="false" src="logo_transparent.png" class="logo">
+  <img draggable="false" src="logo_transparent_col.png" class="logo">
   <span class="appbar-spacer"></span>
   <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
     <mat-icon>menu</mat-icon>
@@ -9,14 +9,19 @@
   </button>
 </mat-toolbar>
 
-<mat-grid-list class="main" rowHeight="1000px" cols="5">
-  <mat-grid-tile colspan="2">1</mat-grid-tile>
-  <mat-grid-tile colspan="3"></mat-grid-tile>
+<div class="map-container">
   <div id="map"></div>
-</mat-grid-list>
+  <div class="title">
+    Găsește-ți perechea în
+    <br>
+    comunitatea care te reprezintă!
+    <br>
+    <button class="register" mat-flat-button color="primary">Înregistrează-te</button>
+  </div>
+</div>
 
 <mat-toolbar class="footer">
-  <img draggable="false" src="logo_transparent.png" class="logo">
+  <img draggable="false" src="logo_transparent_col.png" class="logo">
 
   <mat-grid-list gutterSize="20px" rowHeight="150px" class="footer-grid" cols="1">
     <mat-grid-tile rowspan="1">Fondatori</mat-grid-tile>

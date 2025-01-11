@@ -1,11 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@font-face {
+  font-family: 'Galanogrotesque';
+  src: url('https://cdn.prod.website-files.com/66fd1e0da791d1db3f43e9bb/66fd1e0da791d1db3f43ea03_galanogrotesque-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 $tb-height: 80px;
 $gutter: 20px;
 $ft-height: 600px + $gutter * 3;
+$bkp: 1850px;
 
 app-root {
   height: 100%;
@@ -47,54 +62,73 @@ app-root {
     }
   }
 
-  mat-grid-list {
-    display: block;
+  .map-container {
+    height: 1000px;
+    display: flex;
+    justify-content: right;
+    align-items: center;
     position: relative;
+    margin-top: $tb-height;
 
-    &.main {
-      margin-top: $tb-height;
+    @media (width <= $bkp) {
+      justify-content: left;
+    }
 
-      #map {
-        position: absolute;
-        top: 0;
-        right: 0;
-        height: 1000px;
-        width: 8000px;
-        transform: translateX(3900px);
+    #map {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 1000px;
+      width: 8000px;
+      transform: translateX(3900px);
+      z-index: 1;
 
-        // style is from https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/
-        .marker {
-          background-image: url("https://docs.mapbox.com/help/demos/custom-markers-gl-js/mapbox-icon.png");
-          background-size: cover;
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          cursor: pointer;
-        }
-      }
-
-      mat-grid-tile {
-        // background: lightblue;
+      // style is from https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/
+      .marker {
+        background-image: url("https://docs.mapbox.com/help/demos/custom-markers-gl-js/mapbox-icon.png");
+        background-size: cover;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
       }
     }
 
-    &.footer-grid {
-      .founder {
-        .img-container {
-          border-radius: 50%;
-          overflow: hidden;
-          height: 150px;
-          width: 150px;
-          margin-right: 20px;
+    .title {
+      z-index: 2;
+      font-family: Galanogrotesque,sans-serif;
+      font-size: 60px;
+      margin-right: 800px;
+      @media (width <= $bkp) {
+        margin-right: unset;
+        margin-left: 100px;
+      }
 
-          img {
-          }
+      .register {
+        background-color: rgb(66 100 251);
+        padding: 40px;
+        font-size: 24px;
+        margin-top: 50px;
+      }
+    }
+  }
+
+  .footer-grid {
+    .founder {
+      .img-container {
+        border-radius: 50%;
+        overflow: hidden;
+        height: 150px;
+        width: 150px;
+        margin-right: 20px;
+
+        img {
         }
       }
+    }
 
-      mat-grid-tile {
-        // background: lightgrey;
-      }
+    mat-grid-tile {
+      // background: lightgrey;
     }
   }
 }
