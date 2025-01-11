@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-
+@use '@angular/material' as mat;
 @font-face {
   font-family: 'Galanogrotesque';
   src: url('https://cdn.prod.website-files.com/66fd1e0da791d1db3f43e9bb/66fd1e0da791d1db3f43ea03_galanogrotesque-bold.woff2') format('woff2');
@@ -21,6 +21,10 @@ $tb-height: 80px;
 $gutter: 20px;
 $ft-height: 600px + $gutter * 3;
 $bkp: 1850px;
+
+@include mat.dialog-overrides((
+  container-min-width: 600px
+));
 
 app-root {
   height: 100%;
@@ -95,6 +99,7 @@ app-root {
     }
 
     .title {
+      user-select: none;
       z-index: 2;
       font-family: Galanogrotesque,sans-serif;
       font-size: 60px;
