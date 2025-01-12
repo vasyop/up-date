@@ -13,12 +13,25 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { CommonModule } from '@angular/common';
+import { startWith } from 'rxjs';
+
+export const StrongPasswordRegx: RegExp =
+  /^(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])(?=\D*\d).{8,}$/;
+
 @Component({
   selector: 'app-root',
   imports: [
+    CommonModule,
     RouterOutlet,
     MatToolbarModule,
     MatIconModule,
@@ -39,7 +52,9 @@ export class AppComponent {
   }
 
   openRegisterDialog(): void {
-    const dialogRef = this.dialog.open(RegisterDialog);
+    const dialogRef = this.dialog.open(RegisterDialog, {
+      width: '600px',
+    });
   }
 
   initMap() {
@@ -94,21 +109,44 @@ export class AppComponent {
 
 @Component({
   template: `
-<h2 mat-dialog-title>Creează-ți contul</h2>
-<mat-dialog-content>
-  <p>Număr de telefon</p>
-  <mat-form-field>
-    <mat-label>Număr de telefon</mat-label>
-    <input [formControl]="phoneNumber" matInput />
-    @if (phoneNumber.invalid) {
-      <mat-error>mmm</mat-error>
-    }
-  </mat-form-field>
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button cdkFocusInitial>OK</button>
-</mat-dialog-actions>
-`,
+    <h2 mat-dialog-title class="create-acc-title">Creează-ți contul</h2>
+    <mat-dialog-content>
+      <p>
+        <mat-form-field>
+          <mat-label>Număr de telefon</mat-label>
+          <input [formControl]="phoneNumber" matInput />
+          @if (phoneNumber.invalid) {
+          <mat-error>Incorrect</mat-error>
+          }
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="password">
+          <mat-label>Parola</mat-label>
+          <input [formControl]="password" matInput />
+        </mat-form-field>
+
+          @let pw = pwVal$ | async;
+
+          <mat-error>
+            <div [hidden]="!!pw?.match('^(?=.*[A-Z])')">
+              At least one uppercase letter.
+            </div>
+            <div [hidden]="!!pw?.match('(?=.*[a-z])')">
+              At least one lowercase letter.
+            </div>
+            <div [hidden]="!!pw?.match('(.*[0-9].*)')">At least one digit.</div>
+            <div [hidden]="!!pw?.match('(?=.*[!@#$%^&*])')">
+              At least one special character.
+            </div>
+            <div [hidden]="pw?.match('.{8,}')">At least 8 characters long.</div>
+          </mat-error>
+      </p>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-button cdkFocusInitial>OK</button>
+    </mat-dialog-actions>
+  `,
   imports: [
     MatFormFieldModule,
     MatInputModule,
@@ -118,10 +156,15 @@ export class AppComponent {
     MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
+    CommonModule,
   ],
 })
 export class RegisterDialog {
-  MOBILE_PATTERN = /^\d{10}$/
+  MOBILE_PATTERN = /^\d{10}$/;
   dialogRef = inject(MatDialogRef<RegisterDialog>);
-  phoneNumber = new FormControl('', [Validators.pattern(this.MOBILE_PATTERN)])
+  phoneNumber = new FormControl('', [Validators.pattern(this.MOBILE_PATTERN)]);
+  password = new FormControl<string>('', {
+    validators: [Validators.required, Validators.pattern(StrongPasswordRegx)],
+  });
+  pwVal$ = this.password.valueChanges.pipe(startWith(''))
 }
