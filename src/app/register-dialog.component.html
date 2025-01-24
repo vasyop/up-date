@@ -1,0 +1,55 @@
+<h2 mat-dialog-title
+    class="create-acc-title">Creează-ți contul</h2>
+
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Număr de telefon</mat-label>
+    <input [formControl]="phoneNumber"
+           matInput
+           cdkFocusInitial />
+    @if (phoneNumber.invalid) {
+    <mat-error>Incorrect</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field class="password">
+    <mat-label>Parola</mat-label>
+    <input [formControl]="password"
+           matInput />
+  </mat-form-field>
+
+  @let pw = pwVal$ | async; @let allValid = allValid$ | async;
+
+  <mat-error>
+    @for (check of passwordChecks; track check.regexp) {
+    <div>
+      @if (isValid(pw, check.regexp)) {
+      <span class="line green">
+        <mat-icon>check</mat-icon> {{ check.message }}
+      </span>
+      } @if (!isValid(pw, check.regexp)) {
+      <span class="line">
+        <mat-icon>cancel</mat-icon> {{ check.message }}
+      </span>
+      }
+    </div>
+    }
+  </mat-error>
+
+  <mat-checkbox class="first"
+                [formControl]="privacy">
+    Am citit și sunt de acord cu
+    <a href="#"> Politica de confidențialitate </a>
+  </mat-checkbox>
+
+  <mat-checkbox [formControl]="terms">
+    Am citit și sunt de acord cu
+    <a href="#"> Termenii și condițiile </a>
+  </mat-checkbox>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button [disabled]="!allValid"
+          mat-button>OK</button>
+</mat-dialog-actions>
