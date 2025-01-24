@@ -145,4 +145,17 @@ app-root {
       // margin-bottom: 80px;
     }
   }
+
+  .mat-mdc-form-field-error .line {
+    height: 24px;
+    display: flex;
+
+    .mat-icon {
+      margin-right: 10px;
+    }
+
+    &.green {
+      color: green;
+    }
+  }
 }

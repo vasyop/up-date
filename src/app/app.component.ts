@@ -23,7 +23,7 @@ import {
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
-import { startWith } from 'rxjs';
+import { map, startWith } from 'rxjs';
 
 export const StrongPasswordRegx: RegExp =
   /^(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])(?=\D*\d).{8,}$/;
@@ -126,25 +126,29 @@ export class AppComponent {
           <input [formControl]="password" matInput />
         </mat-form-field>
 
-          @let pw = pwVal$ | async;
+        @let pw = pwVal$ | async; @let allValid = allValid$ | async;
 
-          <mat-error>
-            <div [hidden]="!!pw?.match('^(?=.*[A-Z])')">
-              At least one uppercase letter.
-            </div>
-            <div [hidden]="!!pw?.match('(?=.*[a-z])')">
-              At least one lowercase letter.
-            </div>
-            <div [hidden]="!!pw?.match('(.*[0-9].*)')">At least one digit.</div>
-            <div [hidden]="!!pw?.match('(?=.*[!@#$%^&*])')">
-              At least one special character.
-            </div>
-            <div [hidden]="pw?.match('.{8,}')">At least 8 characters long.</div>
-          </mat-error>
+        <mat-error>
+          @for (check of passwordChecks; track check.regexp) {
+
+          <div>
+            @if (isValid(pw, check.regexp)) {
+            <span class="line green">
+              <mat-icon>check</mat-icon> {{ check.message }}
+            </span>
+            } @if (!isValid(pw, check.regexp)) {
+            <span class="line">
+              <mat-icon>cancel</mat-icon> {{ check.message }}
+            </span>
+            }
+          </div>
+
+          }
+        </mat-error>
       </p>
     </mat-dialog-content>
     <mat-dialog-actions>
-      <button mat-button cdkFocusInitial>OK</button>
+      <button [disabled]="!allValid" mat-button cdkFocusInitial>OK</button>
     </mat-dialog-actions>
   `,
   imports: [
@@ -153,6 +157,7 @@ export class AppComponent {
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
+    MatIconModule,
     MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
@@ -160,11 +165,43 @@ export class AppComponent {
   ],
 })
 export class RegisterDialog {
+  passwordChecks = [
+    {
+      regexp: '^(?=.*[A-Z])',
+      message: 'Cel puțin o literă mare.',
+    },
+    {
+      regexp: '(?=.*[a-z])',
+      message: 'Cel puțin o literă mică.',
+    },
+    {
+      regexp: '(.*[0-9].*)',
+      message: 'Cel puțin o cifră.',
+    },
+    {
+      regexp: '(?=.*[!@#$%^&*])',
+      message: 'Cel puțin un caracter special (!@#$%^&*).',
+    },
+    {
+      regexp: '.{8,}',
+      message: 'Cel puțin 8 caractere.',
+    },
+  ];
+
+  public isValid(pw: string | null, regexp: string) {
+    return !!pw?.match(regexp);
+  }
+
   MOBILE_PATTERN = /^\d{10}$/;
   dialogRef = inject(MatDialogRef<RegisterDialog>);
   phoneNumber = new FormControl('', [Validators.pattern(this.MOBILE_PATTERN)]);
   password = new FormControl<string>('', {
     validators: [Validators.required, Validators.pattern(StrongPasswordRegx)],
   });
-  pwVal$ = this.password.valueChanges.pipe(startWith(''))
+  pwVal$ = this.password.valueChanges.pipe(startWith(''));
+  allValid$ = this.pwVal$.pipe(
+    map((pw) =>
+      this.passwordChecks.every((check) => this.isValid(pw, check.regexp))
+    )
+  );
 }
