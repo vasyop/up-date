@@ -1,4 +1,10 @@
-import { Component, inject, model, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  inject,
+  isDevMode,
+  model,
+  ViewEncapsulation,
+} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,12 +28,14 @@ import {
 } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
-import { map, startWith } from 'rxjs';
+import { combineLatest, map, startWith, tap } from 'rxjs';
 
 export const StrongPasswordRegx: RegExp =
   /^(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])(?=\D*\d).{8,}$/;
-
+const INIT_NR = isDevMode() ? '0749511223' : '';
+const INIT_PW = isDevMode() ? '#$KLJ#j*fE8' : '';
 @Component({
   selector: 'app-root',
   imports: [
@@ -51,9 +59,12 @@ export class AppComponent {
     }, 500);
   }
 
-  openRegisterDialog(): void {
-    const dialogRef = this.dialog.open(RegisterDialog, {
+  openRegisterDialog(type: 'login' | 'register'): void {
+    this.dialog.open(RegisterDialog, {
       width: '600px',
+      data: {
+        type,
+      }
     });
   }
 
@@ -110,45 +121,53 @@ export class AppComponent {
 @Component({
   template: `
     <h2 mat-dialog-title class="create-acc-title">Creează-ți contul</h2>
+
     <mat-dialog-content>
-      <p>
-        <mat-form-field>
-          <mat-label>Număr de telefon</mat-label>
-          <input [formControl]="phoneNumber" matInput />
-          @if (phoneNumber.invalid) {
-          <mat-error>Incorrect</mat-error>
+      <mat-form-field>
+        <mat-label>Număr de telefon</mat-label>
+        <input [formControl]="phoneNumber" matInput cdkFocusInitial />
+        @if (phoneNumber.invalid) {
+        <mat-error>Incorrect</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="password">
+        <mat-label>Parola</mat-label>
+        <input [formControl]="password" matInput />
+      </mat-form-field>
+
+      @let pw = pwVal$ | async; @let allValid = allValid$ | async;
+
+      <mat-error>
+        @for (check of passwordChecks; track check.regexp) {
+        <div>
+          @if (isValid(pw, check.regexp)) {
+          <span class="line green">
+            <mat-icon>check</mat-icon> {{ check.message }}
+          </span>
+          } @if (!isValid(pw, check.regexp)) {
+          <span class="line">
+            <mat-icon>cancel</mat-icon> {{ check.message }}
+          </span>
           }
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="password">
-          <mat-label>Parola</mat-label>
-          <input [formControl]="password" matInput />
-        </mat-form-field>
+        </div>
+        }
+      </mat-error>
 
-        @let pw = pwVal$ | async; @let allValid = allValid$ | async;
+      <mat-checkbox class="first" [formControl]="privacy">
+        Am citit și sunt de acord cu
+        <a href="#"> Politica de confidențialitate </a>
+      </mat-checkbox>
 
-        <mat-error>
-          @for (check of passwordChecks; track check.regexp) {
+      <mat-checkbox [formControl]="terms">
+        Am citit și sunt de acord cu
+        <a href="#"> Termenii și condițiile </a>
+      </mat-checkbox>
 
-          <div>
-            @if (isValid(pw, check.regexp)) {
-            <span class="line green">
-              <mat-icon>check</mat-icon> {{ check.message }}
-            </span>
-            } @if (!isValid(pw, check.regexp)) {
-            <span class="line">
-              <mat-icon>cancel</mat-icon> {{ check.message }}
-            </span>
-            }
-          </div>
-
-          }
-        </mat-error>
-      </p>
     </mat-dialog-content>
+
     <mat-dialog-actions>
-      <button [disabled]="!allValid" mat-button cdkFocusInitial>OK</button>
+      <button [disabled]="!allValid" mat-button>OK</button>
     </mat-dialog-actions>
   `,
   imports: [
@@ -157,6 +176,7 @@ export class AppComponent {
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
+    MatCheckboxModule,
     MatIconModule,
     MatDialogTitle,
     MatDialogContent,
@@ -188,20 +208,32 @@ export class RegisterDialog {
     },
   ];
 
+  MOBILE_PATTERN = /^\d{10}$/;
+  dialogRef = inject(MatDialogRef<RegisterDialog>);
+  phoneNumber = new FormControl(INIT_NR, [
+    Validators.pattern(this.MOBILE_PATTERN),
+  ]);
+  password = new FormControl<string>(INIT_PW, {
+    validators: [Validators.required, Validators.pattern(StrongPasswordRegx)],
+  });
+  terms = new FormControl(false);
+  privacy = new FormControl(false);
+  pwVal$ = this.password.valueChanges.pipe(startWith(INIT_PW));
+  allValid$ = combineLatest([
+    this.terms.valueChanges.pipe(map((checked) => !!checked)),
+    this.privacy.valueChanges.pipe(map((checked) => !!checked)),
+    this.phoneNumber.valueChanges.pipe(
+      startWith(INIT_NR),
+      map(() => this.phoneNumber.valid)
+    ),
+    this.pwVal$.pipe(
+      map((pw) =>
+        this.passwordChecks.every((check) => this.isValid(pw, check.regexp))
+      )
+    ),
+  ]).pipe(map((arr) => arr.every((x) => x)));
+
   public isValid(pw: string | null, regexp: string) {
     return !!pw?.match(regexp);
   }
-
-  MOBILE_PATTERN = /^\d{10}$/;
-  dialogRef = inject(MatDialogRef<RegisterDialog>);
-  phoneNumber = new FormControl('', [Validators.pattern(this.MOBILE_PATTERN)]);
-  password = new FormControl<string>('', {
-    validators: [Validators.required, Validators.pattern(StrongPasswordRegx)],
-  });
-  pwVal$ = this.password.valueChanges.pipe(startWith(''));
-  allValid$ = this.pwVal$.pipe(
-    map((pw) =>
-      this.passwordChecks.every((check) => this.isValid(pw, check.regexp))
-    )
-  );
 }

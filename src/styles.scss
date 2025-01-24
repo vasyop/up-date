@@ -111,6 +111,18 @@ app-root {
         font-size: 24px;
         margin-top: 50px;
       }
+
+      .already {
+        font-size: 24px;
+        a {
+          color: #2bb9e8;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
     }
   }
 
@@ -139,15 +151,21 @@ app-root {
     margin-bottom: 25px;
   }
 
+  .mat-mdc-dialog-content {
+    overflow: hidden;
+  }
+
   .mat-mdc-form-field {
     width: 100%;
     &.password {
-      // margin-bottom: 80px;
+      .mat-mdc-form-field-subscript-wrapper {
+        height: 0;
+      }
     }
   }
 
   .mat-mdc-form-field-error .line {
-    height: 24px;
+    height: 26px;
     display: flex;
 
     .mat-icon {
@@ -155,7 +173,20 @@ app-root {
     }
 
     &.green {
-      color: green;
+      color: #2d44aa;
+    }
+  }
+
+  .mat-mdc-checkbox {
+    left: -10px;
+
+    &.first {
+      margin-top: 6px;
+    }
+
+    a {
+      font-weight: 550;
+      color: #2d44aa;
     }
   }
 }

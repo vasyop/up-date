@@ -1,10 +1,16 @@
 <mat-toolbar class="header">
-  <img draggable="false" src="logo_transparent_col.png" class="logo">
+  <img draggable="false"
+       src="logo_transparent_col.png"
+       class="logo">
   <span class="appbar-spacer"></span>
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+  <button mat-icon-button
+          class="example-icon"
+          aria-label="Example icon-button with menu icon">
     <mat-icon>menu</mat-icon>
   </button>
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+  <button mat-icon-button
+          class="example-icon"
+          aria-label="Example icon-button with share icon">
     <mat-icon>share</mat-icon>
   </button>
 </mat-toolbar>
@@ -16,28 +22,44 @@
     <br>
     comunitatea care te reprezintă!
     <br>
-    <button
-     class="register"
-     mat-flat-button color="primary"
-     (click)="openRegisterDialog()"
-     >Înregistrează-te</button>
+    <button class="register"
+            mat-flat-button
+            color="primary"
+            (click)="openRegisterDialog('register')">Înregistrează-te
+    </button>
+    <br>
+    <span class="already">
+      Ai deja cont?
+      <a href="#">Conectează-te</a>
+    </span>
   </div>
 </div>
 
 <mat-toolbar class="footer">
-  <img draggable="false" src="logo_transparent_col.png" class="logo">
+  <img draggable="false"
+       src="logo_transparent_col.png"
+       class="logo">
 
-  <mat-grid-list gutterSize="20px" rowHeight="150px" class="footer-grid" cols="1">
+  <mat-grid-list gutterSize="20px"
+                 rowHeight="150px"
+                 class="footer-grid"
+                 cols="1">
     <mat-grid-tile rowspan="1">Fondatori</mat-grid-tile>
-    <mat-grid-tile class="founder" rowspan="1">
+    <mat-grid-tile class="founder"
+                   rowspan="1">
       <div class="img-container">
-        <img src="https://placehold.co/150x150" alt="" srcset="">
+        <img src="https://placehold.co/150x150"
+             alt=""
+             srcset="">
       </div>
       <span>Andrei Vasilescu</span>
     </mat-grid-tile>
-    <mat-grid-tile class="founder" rowspan="1">
+    <mat-grid-tile class="founder"
+                   rowspan="1">
       <div class="img-container">
-        <img src="https://placehold.co/150x150" alt="" srcset="">
+        <img src="https://placehold.co/150x150"
+             alt=""
+             srcset="">
       </div>
       <span>Ana Stanculescu</span>
     </mat-grid-tile>
