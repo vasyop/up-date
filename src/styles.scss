@@ -157,9 +157,15 @@ app-root {
 
   .mat-mdc-form-field {
     width: 100%;
+
     &.password {
       .mat-mdc-form-field-subscript-wrapper {
         height: 0;
+      }
+    }
+    &.phone {
+      .mat-mdc-form-field-subscript-wrapper {
+        height: 28px;
       }
     }
   }

@@ -30,7 +30,10 @@
     <br>
     <span class="already">
       Ai deja cont?
-      <a href="#">Conectează-te</a>
+      <a href="#"
+         (click)="$event.preventDefault(); openRegisterDialog('login')">
+        Conectează-te
+      </a>
     </span>
   </div>
 </div>

@@ -5,6 +5,7 @@ import {
   model,
   ViewEncapsulation,
 } from '@angular/core';
+import { Inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,6 +34,8 @@ import { CommonModule } from '@angular/common';
 import { combineLatest, map, startWith, tap } from 'rxjs';
 
 const INIT_NR = isDevMode() ? '0749511223' : '';
+const INIT_TERMS = false
+const INIT_PRIVACY = false
 const INIT_PW = isDevMode() ? '#$KLJ#j*fE8' : '';
 export const StrongPasswordRegx: RegExp =
   /^(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])(?=\D*\d).{8,}$/;
@@ -85,24 +88,38 @@ export class RegisterDialog {
   password = new FormControl<string>(INIT_PW, {
     validators: [Validators.required, Validators.pattern(StrongPasswordRegx)],
   });
-  terms = new FormControl(false);
-  privacy = new FormControl(false);
+  terms = new FormControl(INIT_TERMS);
+  privacy = new FormControl(INIT_PRIVACY);
   pwVal$ = this.password.valueChanges.pipe(startWith(INIT_PW));
   allValid$ = combineLatest([
-    this.terms.valueChanges.pipe(map((checked) => !!checked)),
-    this.privacy.valueChanges.pipe(map((checked) => !!checked)),
+    this.terms.valueChanges.pipe(
+      startWith(INIT_TERMS),
+      map((checked) => !!checked || this.data.type === 'login')
+    ),
+    this.privacy.valueChanges.pipe(
+      startWith(INIT_PRIVACY),
+      map((checked) => !!checked || this.data.type === 'login')
+    ),
     this.phoneNumber.valueChanges.pipe(
       startWith(INIT_NR),
       map(() => this.phoneNumber.valid)
     ),
     this.pwVal$.pipe(
       map((pw) =>
-        this.passwordChecks.every((check) => this.isValid(pw, check.regexp))
+        this.passwordChecks.every((check) => this.isValid(pw, check.regexp) )
       )
     ),
-  ]).pipe(map((arr) => arr.every((x) => x)));
+  ]).pipe(map((arr) => arr.every((x) => x) || this.data.type === 'login'));
 
   public isValid(pw: string | null, regexp: string) {
     return !!pw?.match(regexp);
+  }
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      type: 'login' | 'register';
+    }
+  ) {
   }
 }

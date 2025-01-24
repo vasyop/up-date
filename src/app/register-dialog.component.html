@@ -1,25 +1,29 @@
 <h2 mat-dialog-title
-    class="create-acc-title">Creează-ți contul</h2>
+    class="create-acc-title">
+  {{data.type === 'register' ? 'Creează-ți contul' : 'Conectează-te'}}
+</h2>
 
 <mat-dialog-content>
-  <mat-form-field>
+  <mat-form-field class="phone">
     <mat-label>Număr de telefon</mat-label>
     <input [formControl]="phoneNumber"
            matInput
            cdkFocusInitial />
     @if (phoneNumber.invalid) {
-    <mat-error>Incorrect</mat-error>
+    <mat-error>Incorect</mat-error>
     }
   </mat-form-field>
 
   <mat-form-field class="password">
     <mat-label>Parola</mat-label>
     <input [formControl]="password"
+           type="password"
            matInput />
   </mat-form-field>
 
   @let pw = pwVal$ | async; @let allValid = allValid$ | async;
 
+  @if (data.type === 'register') {
   <mat-error>
     @for (check of passwordChecks; track check.regexp) {
     <div>
@@ -35,7 +39,9 @@
     </div>
     }
   </mat-error>
+  }
 
+  @if (data.type === 'register') {
   <mat-checkbox class="first"
                 [formControl]="privacy">
     Am citit și sunt de acord cu
@@ -46,6 +52,7 @@
     Am citit și sunt de acord cu
     <a href="#"> Termenii și condițiile </a>
   </mat-checkbox>
+  }
 
 </mat-dialog-content>
 
