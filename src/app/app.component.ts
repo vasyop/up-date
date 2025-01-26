@@ -31,7 +31,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
 import { combineLatest, map, startWith, tap } from 'rxjs';
-import { RegisterDialog } from './register-dialog.component';
+import { DIAG_WIDTH, RegisterDialog } from './register-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -58,7 +58,7 @@ export class AppComponent {
 
   openRegisterDialog(type: 'login' | 'register'): void {
     this.dialog.open(RegisterDialog, {
-      width: '600px',
+      width: DIAG_WIDTH,
       data: {
         type,
       }

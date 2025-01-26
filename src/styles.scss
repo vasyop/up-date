@@ -165,9 +165,21 @@ app-root {
     }
     &.phone {
       .mat-mdc-form-field-subscript-wrapper {
-        height: 28px;
+        height: 4px;
       }
     }
+  }
+
+  .mat-mdc-form-field-error.phone-err {
+    margin-bottom: 6px;
+  }
+
+  .reset-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: #2d44aa;
+    text-decoration: none;
+    font-weight: 550;
   }
 
   .mat-mdc-form-field-error .line {

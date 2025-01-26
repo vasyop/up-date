@@ -1,29 +1,51 @@
 <h2 mat-dialog-title
     class="create-acc-title">
-  {{data.type === 'register' ? 'Creează-ți contul' : 'Conectează-te'}}
+  {{ DIAG_TITLE[data.type] }}
 </h2>
 
 <mat-dialog-content>
+  @if (PHONE_STATES.includes(data.type)) {
   <mat-form-field class="phone">
     <mat-label>Număr de telefon</mat-label>
     <input [formControl]="phoneNumber"
            matInput
            cdkFocusInitial />
-    @if (phoneNumber.invalid) {
-    <mat-error>Incorect</mat-error>
-    }
   </mat-form-field>
+  @if (!phoneNumber.value?.match(this.MOBILE_PATTERN)) {
+  <mat-error class="phone-err">Incorect</mat-error>
+  } @else {
+  <mat-error class="phone-err"></mat-error>
+  }
+  }
 
+  @if (data.type === 'code') {
+  <mat-form-field>
+    <mat-label>Cod confirmare</mat-label>
+    <input [formControl]="code"
+           matInput />
+  </mat-form-field>
+  }
+
+  @if (PASSWORD_STATES.includes(data.type)) {
   <mat-form-field class="password">
     <mat-label>Parola</mat-label>
     <input [formControl]="password"
            type="password"
            matInput />
   </mat-form-field>
+  }
 
-  @let pw = pwVal$ | async; @let allValid = allValid$ | async;
+  @if(data.type === 'login') {
+  <a href="#"
+     (click)="$event.preventDefault(); navigateToReset()"
+     class="reset-link">
+    Ai uitat parola? Reseteaza
+  </a>
+  }
 
-  @if (data.type === 'register') {
+  @let pw = pwVal$ | async; @let okEnabled = okEnabled$ | async;
+
+  @if (PASSWORD_VALIDATION_STATES.includes(data.type)) {
   <mat-error>
     @for (check of passwordChecks; track check.regexp) {
     <div>
@@ -57,6 +79,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button [disabled]="!allValid"
-          mat-button>OK</button>
+  <button [disabled]="!okEnabled"
+          (click)="submit()"
+          mat-button>OK
+  </button>
 </mat-dialog-actions>
