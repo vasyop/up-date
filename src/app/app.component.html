@@ -3,21 +3,50 @@
        src="logo_transparent_col.png"
        class="logo">
   <span class="appbar-spacer"></span>
+
   <button mat-icon-button
-          class="example-icon"
-          aria-label="Example icon-button with menu icon">
+          [matMenuTriggerFor]="menu">
     <mat-icon>menu</mat-icon>
   </button>
-  <button mat-icon-button
-          class="example-icon"
-          aria-label="Example icon-button with share icon">
+
+  <mat-menu #menu="matMenu">
+    <button (click)="page$.next('regLog')"
+            mat-menu-item>
+      <mat-icon>home</mat-icon>
+      <span>Acasă</span>
+    </button>
+
+    <button (click)="page$.next('about')"
+            mat-menu-item>
+      <mat-icon>info</mat-icon>
+      <span>Despre noi</span>
+    </button>
+
+    <button mat-menu-item>
+      <mat-icon>email</mat-icon>
+      <span>Solicitări</span>
+    </button>
+
+    <button mat-menu-item>
+      <mat-icon>manage_accounts</mat-icon>
+      <span>Protectia datelor cu caracter personal</span>
+    </button>
+
+  </mat-menu>
+
+  <button mat-icon-button>
     <mat-icon>share</mat-icon>
   </button>
+
 </mat-toolbar>
+
+@let page = page$ | async;
 
 <div class="map-container">
   <div id="map"></div>
-  <div class="title">
+
+  <div class="title"
+       [class.hidden]="page !== 'regLog'">
     Găsește-ți perechea în
     <br>
     comunitatea care te reprezintă!
@@ -36,6 +65,7 @@
       </a>
     </span>
   </div>
+
 </div>
 
 <mat-toolbar class="footer">

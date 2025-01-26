@@ -95,6 +95,12 @@ app-root {
     }
 
     .title {
+      transition: transform 500ms;
+
+      &.hidden {
+        transform: translateX(-100vw);
+      }
+
       user-select: none;
       z-index: 2;
       font-family: Galanogrotesque,sans-serif;

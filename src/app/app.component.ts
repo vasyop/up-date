@@ -10,6 +10,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatMenuModule } from '@angular/material/menu';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -30,16 +31,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
-import { combineLatest, map, startWith, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, startWith, tap } from 'rxjs';
 import { DIAG_WIDTH, RegisterDialog } from './register-dialog.component';
 
 @Component({
   selector: 'app-root',
   imports: [
     CommonModule,
-    RouterOutlet,
-    MatToolbarModule,
+    MatMenuModule,
     MatIconModule,
+    MatToolbarModule,
     MatButtonModule,
     MatGridListModule,
   ],
@@ -48,6 +49,7 @@ import { DIAG_WIDTH, RegisterDialog } from './register-dialog.component';
   encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent {
+  page$ = new BehaviorSubject<'regLog' | 'about'>('regLog');
   dialog = inject(MatDialog);
 
   ngAfterContentInit() {
@@ -61,7 +63,7 @@ export class AppComponent {
       width: DIAG_WIDTH,
       data: {
         type,
-      }
+      },
     });
   }
 
