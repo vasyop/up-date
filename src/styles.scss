@@ -63,52 +63,39 @@ app-root {
   }
 
   .map-container {
-    height: 1000px;
-    display: flex;
-    justify-content: right;
-    align-items: center;
-    position: relative;
     margin-top: $tb-height;
 
-    @media (width <= $bkp) {
-      justify-content: left;
-    }
-
-    #map {
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 1000px;
-      width: 8000px;
-      transform: translateX(3900px);
-      z-index: 1;
-
-      // style is from https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/
-      .marker {
-        background-image: url("https://docs.mapbox.com/help/demos/custom-markers-gl-js/mapbox-icon.png");
-        background-size: cover;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        cursor: pointer;
-      }
-    }
-
     .title {
-      transition: transform 500ms;
-
-      &.hidden {
-        transform: translateX(-100vw);
-      }
-
       user-select: none;
       z-index: 2;
       font-family: Galanogrotesque,sans-serif;
       font-size: 60px;
-      margin-right: 800px;
+
+      &.about {
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        margin-top: 60px;
+        margin-bottom: 60px;
+        margin-left: 100px;
+        margin-right: 100px;
+
+        .main-title {
+          font-family: Galanogrotesque,sans-serif;
+        }
+      }
+
+      &.reg-log {
+        margin-right: 800px;
+      }
+
       @media (width <= $bkp) {
         margin-right: unset;
         margin-left: 100px;
+      }
+
+      .about-text {
+        margin-top: 50px;
+        font-size: 20px;
+        line-height: 36px;
       }
 
       .register {
@@ -128,6 +115,43 @@ app-root {
             text-decoration: underline;
           }
         }
+      }
+    }
+
+    &.reg-log {
+      @media (width <= $bkp) {
+        justify-content: left;
+      }
+      height: 1000px;
+      display: flex;
+      justify-content: right;
+      align-items: center;
+      position: relative;
+
+      #map {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 1000px;
+        width: 8000px;
+        transform: translateX(3900px);
+        z-index: 1;
+
+        // style is from https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/
+        .marker {
+          background-image: url("https://docs.mapbox.com/help/demos/custom-markers-gl-js/mapbox-icon.png");
+          background-size: cover;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+      }
+    }
+
+    &.about {
+      #map {
+        visibility: hidden;
       }
     }
   }

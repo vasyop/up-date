@@ -53,6 +53,10 @@ export class AppComponent {
   dialog = inject(MatDialog);
 
   ngAfterContentInit() {
+    this.page$.subscribe(() => {
+      window.scrollTo(0,0)
+    });
+
     setTimeout(() => {
       this.initMap();
     }, 500);
@@ -65,6 +69,13 @@ export class AppComponent {
         type,
       },
     });
+  }
+
+  pageClasses(page: string | null) {
+    return {
+      about: page === 'about',
+      'reg-log': page === 'regLog'
+    };
   }
 
   initMap() {

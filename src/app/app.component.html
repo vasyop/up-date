@@ -42,12 +42,23 @@
 
 @let page = page$ | async;
 
-<div class="map-container">
+<div class="map-container"
+     [ngClass]="pageClasses(page)">
+
   <div id="map"></div>
 
   <div class="title"
-       [class.hidden]="page !== 'regLog'">
-    Găsește-ți perechea în
+       [ngClass]="pageClasses(page)">
+
+    <span class="main-title">
+      @if(page === 'regLog') {
+      Găsește-ți perechea în
+      } @else if(page === 'about') {
+      Despre noi
+      }
+    </span>
+
+    @if(page === 'regLog') {
     <br>
     comunitatea care te reprezintă!
     <br>
@@ -64,10 +75,71 @@
         Conectează-te
       </a>
     </span>
+    }
+    @if(page === 'about') {
+    <br>
+    <div class="about-text">
+      <div>
+        Într-o lume digitală în continuă expansiune, unde aplicațiile de dating abundă și timpul este tot mai prețios,
+        echipa upDATE a creat o platformă care redefinește modul în care oamenii se pot conecta.
+        Spre deosebire de alte site-uri care pot deveni copleșitoare și rareori oferă rezultate cu adevărat
+        satisfăcătoare, noi ne concentrăm pe ceea ce contează cu adevărat: înțelegerea și acceptarea nevoilor reciproce
+        pentru a forma compatibilități autentice.
+        Platforma se diferențiază prin crearea de categorii nișate, special concepute pentru a satisface nevoile diverse
+        ale utilizatorilor.
+        În spatele fiecărui profil se află algoritmi avansați, construiți pentru a analiza detaliat răspunsurile
+        utilizatorilor și a crea conexiuni bazate pe valori, interese și dorințe comune.
+        Acest proces reduce timpul petrecut în căutarea partenerului/partenerei ideal(e), oferindu-vă mai multe surse de
+        a
+        găsi relații semnificative.
+        Punem accent pe protecția datelor cu caracter personal, asigurându-ne că informațiile dumneavoastră sunt în
+        siguranță.
+        Pentru a minimiza prelucrarea datelor cu caracter personal, procesul de înregistrare/logare al utilizatorilor
+        este
+        simplificat, solicitând doar numărul de telefon mobil și parola, astfel încât să vă puteți bucura de o
+        experiență
+        discretă și sigură.
+      </div>
+
+      <div>
+        <br>
+        <h2>
+          <strong>De ce să ne alegi? </strong>
+        </h2>
+
+        <ul>
+          <li>
+            <strong>Categorii de nișă</strong>: alege dintr-o varietate de categorii care reflectă interesele tale,
+            pentru
+            că avem o comunitate specială pentru tine.
+          </li>
+          <li>
+            <strong>Chestionare dedicate</strong>: fiecare întrebare este atent formulată pentru a obține informații
+            relevante despre personalitatea, obiectivele și așteptările utilizatorilor, asigurând astfel o potrivire cât
+            mai precisă între parteneri.
+          </li>
+          <li>
+            <strong>Proces discret de conectare</strong>: creează-ți un cont rapid folosind doar numărul de telefon și
+            parola, iar experiența ta este protejată și discretă.
+          </li>
+          <li>
+            <strong>Asistență personalizată</strong>: dacă se creează compatibilitate, un angajat te va contacta pentru
+            a discuta cu tine detaliile și a facilita legătura cu persoana compatibilă.
+
+          </li>
+          <li>
+            <strong>Acces la abonamente</strong>: dacă serviciile noastre îți plac, poți achiziționa abonamente în
+            funcție de preferințe.
+          </li>
+        </ul>
+      </div>
+
+    </div>
+    }
   </div>
 
 </div>
-
+@if(page === 'regLog') {
 <mat-toolbar class="footer">
   <img draggable="false"
        src="logo_transparent_col.png"
@@ -100,3 +172,4 @@
   </mat-grid-list>
 
 </mat-toolbar>
+}
