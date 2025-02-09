@@ -10,29 +10,15 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatMenuModule } from '@angular/material/menu';
 import {
-  MAT_DIALOG_DATA,
   MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
 } from '@angular/material/dialog';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
-import { BehaviorSubject, combineLatest, map, startWith, tap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { DIAG_WIDTH, RegisterDialog } from './register-dialog.component';
+import { UserStatusComponent } from './user-status.component';
 
 @Component({
   selector: 'app-root',
@@ -43,13 +29,15 @@ import { DIAG_WIDTH, RegisterDialog } from './register-dialog.component';
     MatToolbarModule,
     MatButtonModule,
     MatGridListModule,
+    MatSidenavModule,
+    UserStatusComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent {
-  page$ = new BehaviorSubject<'regLog' | 'about'>('regLog');
+  page$ = new BehaviorSubject<'regLog' | 'about'| 'dashboard'>('regLog');
   dialog = inject(MatDialog);
 
   ngAfterContentInit() {
@@ -60,10 +48,15 @@ export class AppComponent {
     setTimeout(() => {
       this.initMap();
     }, 500);
+
+    setTimeout(() => {
+      this.page$.next('dashboard'); // TODO: remove this
+    }, 1000);
   }
 
   openRegisterDialog(type: 'login' | 'register'): void {
     this.dialog.open(RegisterDialog, {
+      panelClass: 'register-dialog',
       width: DIAG_WIDTH,
       data: {
         type,
@@ -74,7 +67,8 @@ export class AppComponent {
   pageClasses(page: string | null) {
     return {
       about: page === 'about',
-      'reg-log': page === 'regLog'
+      'reg-log': page === 'regLog',
+      dashboard: page === 'dashboard',
     };
   }
 

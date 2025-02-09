@@ -46,6 +46,8 @@ export const StrongPasswordRegx: RegExp =
 
 @Component({
   templateUrl: './register-dialog.component.html',
+  encapsulation: ViewEncapsulation.None,
+  styleUrl: './register-dialog.component.scss',
   imports: [
     MatFormFieldModule,
     MatInputModule,
@@ -153,6 +155,7 @@ export class RegisterDialog {
   public navigateToReset() {
     this.dialogRef.close();
     this.dialog.open(RegisterDialog, {
+      panelClass: 'register-dialog',
       width: DIAG_WIDTH,
       data: {
         type: 'reset',
@@ -169,6 +172,7 @@ export class RegisterDialog {
   navigateToCode() {
     this.dialogRef.close();
     this.dialog.open(RegisterDialog, {
+      panelClass: 'register-dialog',
       width: DIAG_WIDTH,
       data: {
         type: 'code',

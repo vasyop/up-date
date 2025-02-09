@@ -1,0 +1,47 @@
+$user-status-bkg: #36373d31;
+$user-name-color: #5a5959;
+$user-status-color: #73767a;
+
+user-status {
+  display: flex;
+  padding-left: 18px;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  color: $user-name-color;
+  background-color: $user-status-bkg;
+
+  .icon-text-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .user-icon {
+      height: 36px;
+      width: 36px;
+      font-size: 36px;
+      margin-right: 18px;
+    }
+
+    .text-container {
+      * {
+        margin: 0;
+      }
+
+      .status {
+        margin-top: 4px;
+        color: $user-status-color
+      }
+    }
+  }
+
+  .edit-btn {
+    margin-right: 10px;
+
+    .mat-icon {
+      height: 24px;
+      width: 24px;
+      font-size: 24px;
+    }
+  }
+}

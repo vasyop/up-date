@@ -1,0 +1,64 @@
+.register-dialog {
+  .mat-mdc-dialog-container {
+    .create-acc-title {
+      margin-bottom: 25px;
+    }
+
+    .mat-mdc-dialog-content {
+      overflow: hidden;
+    }
+
+    .mat-mdc-form-field {
+      width: 100%;
+
+      &.password {
+        .mat-mdc-form-field-subscript-wrapper {
+          height: 0;
+        }
+      }
+      &.phone {
+        .mat-mdc-form-field-subscript-wrapper {
+          height: 4px;
+        }
+      }
+    }
+
+    .mat-mdc-form-field-error.phone-err {
+      margin-bottom: 6px;
+    }
+
+    .reset-link {
+      display: inline-block;
+      margin-top: 12px;
+      color: #2d44aa;
+      text-decoration: none;
+      font-weight: 550;
+    }
+
+    .mat-mdc-form-field-error .line {
+      height: 26px;
+      display: flex;
+
+      .mat-icon {
+        margin-right: 10px;
+      }
+
+      &.green {
+        color: #2d44aa;
+      }
+    }
+
+    .mat-mdc-checkbox {
+      left: -10px;
+
+      &.first {
+        margin-top: 6px;
+      }
+
+      a {
+        font-weight: 550;
+        color: #2d44aa;
+      }
+    }
+  }
+}

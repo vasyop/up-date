@@ -47,16 +47,15 @@
 
   <div id="map"></div>
 
+  @if(page === 'regLog' || page === 'about') {
   <div class="title"
        [ngClass]="pageClasses(page)">
 
-    <span class="main-title">
-      @if(page === 'regLog') {
-      Găsește-ți perechea în
-      } @else if(page === 'about') {
-      Despre noi
-      }
-    </span>
+    @if(page === 'regLog') {
+    <span class="main-title">Găsește-ți perechea în</span>
+    } @else if(page === 'about') {
+    <span class="main-title">Despre noi</span>
+    }
 
     @if(page === 'regLog') {
     <br>
@@ -137,8 +136,19 @@
     </div>
     }
   </div>
+  }
 
 </div>
+
+@if(page === 'dashboard') {
+<mat-drawer-container class="dashboard-container">
+  <mat-drawer mode="side" opened>
+    <user-status/>
+  </mat-drawer>
+  <mat-drawer-content>Main content</mat-drawer-content>
+</mat-drawer-container>
+}
+
 @if(page === 'regLog') {
 <mat-toolbar class="footer">
   <img draggable="false"

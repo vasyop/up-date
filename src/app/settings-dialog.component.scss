@@ -1,0 +1,24 @@
+.settings-dialog {
+  .mat-mdc-dialog-title {
+    display: flex;
+    margin-top: 12px;
+
+    .settings-title {
+      flex-grow: 1;
+    }
+
+    .close {
+      justify-self: flex-end;
+    }
+  }
+
+  .mat-mdc-dialog-container {
+    .mat-mdc-dialog-content {
+      overflow: hidden;
+    }
+
+    .mat-mdc-form-field {
+      width: 100%;
+    }
+  }
+}

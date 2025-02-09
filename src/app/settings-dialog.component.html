@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>
+  <span class="settings-title">
+    Setări
+  </span>
+
+  <button class="close"
+          (click)="close()"
+          mat-icon-button>
+    <mat-icon>close</mat-icon>
+  </button>
+
+</h2>
+
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Nume utilizator</mat-label>
+    <input [formControl]="name"
+           matInput />
+  </mat-form-field>
+</mat-dialog-content>

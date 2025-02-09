@@ -1,0 +1,10 @@
+<div class="icon-text-container">
+  <mat-icon class="user-icon">person</mat-icon>
+  <div class="text-container">
+    <h3>{{ db.userName$ | async }}</h3>
+    <p class="status">{{'online'}}</p>
+  </div>
+</div>
+<button (click)="openSettings()" mat-icon-button class="edit-btn">
+  <mat-icon>edit</mat-icon>
+</button>
