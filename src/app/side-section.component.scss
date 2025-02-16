@@ -1,0 +1,29 @@
+.side-section {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+
+  .title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+    h3 {
+      margin: 0;
+    }
+  }
+
+  .full-width-btn.full-width-btn.full-width-btn.full-width-btn { // for specificity
+    width: 100%;
+    margin-bottom: 5px;
+    height: 36px;
+    text-align: left;
+    color: #333;
+    justify-content: flex-start;
+
+    &:hover {
+      border-radius: 4px;
+    }
+  }
+}

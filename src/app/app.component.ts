@@ -16,9 +16,11 @@ import {
   MatDialog,
 } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { DIAG_WIDTH, RegisterDialog } from './register-dialog.component';
 import { UserStatusComponent } from './user-status.component';
+import { SideSectionComponent } from './side-section.component';
+import { DbService } from './db.service';
 
 @Component({
   selector: 'app-root',
@@ -31,6 +33,7 @@ import { UserStatusComponent } from './user-status.component';
     MatGridListModule,
     MatSidenavModule,
     UserStatusComponent,
+    SideSectionComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -39,6 +42,10 @@ import { UserStatusComponent } from './user-status.component';
 export class AppComponent {
   page$ = new BehaviorSubject<'regLog' | 'about'| 'dashboard'>('regLog');
   dialog = inject(MatDialog);
+  db = inject(DbService);
+
+  questionnaires$ = this.db.questionnaires$.pipe(map((links) => links.map((l) => ({ title: l, id: l }))));
+  compatibilities$ = this.db.compatibilities$.pipe(map((comps) => comps.map((c) => ({ title: c, id: c }))));
 
   ngAfterContentInit() {
     this.page$.subscribe(() => {
@@ -70,6 +77,14 @@ export class AppComponent {
       'reg-log': page === 'regLog',
       dashboard: page === 'dashboard',
     };
+  }
+
+  handleLinkClick(title: string, linkId: string) {
+    console.log(`Section: ${title}, Link clicked: ${linkId}`);
+  }
+
+  handleSectionButtonClick(title: string) {
+    console.log(`Section: ${title}, Button clicked`);
   }
 
   initMap() {

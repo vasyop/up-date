@@ -142,8 +142,31 @@
 
 @if(page === 'dashboard') {
 <mat-drawer-container class="dashboard-container">
-  <mat-drawer mode="side" opened>
-    <user-status/>
+  <mat-drawer mode="side"
+              opened>
+    <user-status />
+    <side-section *ngIf="questionnaires$ | async as questionnaires"
+                  [title]="'Chestionare'"
+                  [buttonText]="'add'"
+                  [links]="questionnaires"
+                  (buttonClick)="handleSectionButtonClick('Chestionare')"
+                  (linkClick)="handleLinkClick('Chestionare', $event)">
+    </side-section>
+
+    <side-section *ngIf="compatibilities$ | async as compatibilities"
+                  [title]="'Compatibilități'"
+                  [links]="compatibilities"
+                  (linkClick)="handleLinkClick('Compatibilități', $event)">
+    </side-section>
+
+    <side-section [title]="'Abonamente'"
+                  [links]="[{id: 'sub', title: 'Abonamentul meu'}]"
+                  (linkClick)="handleLinkClick('Abonamente', $event)">
+    </side-section>
+    <side-section [title]="'Altele'"
+                  [links]="[{id: 'feedback', title: 'Solicitari'}, {id: 'del', title: 'Stergere cont'}]"
+                  (linkClick)="handleLinkClick('Altele', $event)">
+    </side-section>
   </mat-drawer>
   <mat-drawer-content>Main content</mat-drawer-content>
 </mat-drawer-container>

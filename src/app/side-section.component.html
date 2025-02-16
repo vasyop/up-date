@@ -1,0 +1,16 @@
+<div class="side-section">
+  <div class="title-container">
+    <h3>{{ title }}</h3>
+    <button *ngIf="buttonText"
+            mat-icon-button
+            (click)="onButtonClick()">
+      <mat-icon>{{ buttonText }}</mat-icon>
+    </button>
+  </div>
+  <button *ngFor="let link of links"
+          mat-button
+          class="full-width-btn"
+          (click)="onLinkClick(link.id)">
+    {{ link.title }}
+  </button>
+</div>
