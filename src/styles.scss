@@ -186,10 +186,40 @@ app-root {
 
   .dashboard-container {
     background-color: white;
+
     .mat-drawer {
       background-color: $col-side;
       padding-top: $tb-height;
     }
+
+    .mat-drawer-content {
+      padding-left: 100px;
+      padding-right: 100px;
+
+      .compatibility-info {
+        .person-name {
+          margin: 40px 0px;
+        }
+
+        .reason {
+          margin-top: 30px;
+
+          .reason-text {
+            line-height: 24px;
+          }
+        }
+      }
+
+      .schedule-text {
+        margin-top: 40px;
+        margin-bottom: 20px;
+      }
+
+      .inline-calendar-card {
+        width: 40%;
+      }
+    }
+
     padding-top: $tb-height;
     height: 100%;
   }

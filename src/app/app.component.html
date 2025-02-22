@@ -146,29 +146,58 @@
               opened>
     <user-status />
     <side-section *ngIf="questionnaires$ | async as questionnaires"
-                  [title]="'Chestionare'"
+                  [title]="SIDE_SECTION.QUESTIONAIRES"
                   [buttonText]="'add'"
                   [links]="questionnaires"
-                  (buttonClick)="handleSectionButtonClick('Chestionare')"
-                  (linkClick)="handleLinkClick('Chestionare', $event)">
+                  (buttonClick)="handleSectionButtonClick(SIDE_SECTION.QUESTIONAIRES)"
+                  (linkClick)="handleLinkClick(SIDE_SECTION.QUESTIONAIRES, $event)">
     </side-section>
 
     <side-section *ngIf="compatibilities$ | async as compatibilities"
-                  [title]="'Compatibilități'"
+                  [title]="SIDE_SECTION.COMPATIBILITIES"
                   [links]="compatibilities"
-                  (linkClick)="handleLinkClick('Compatibilități', $event)">
+                  (linkClick)="handleLinkClick(SIDE_SECTION.COMPATIBILITIES, $event)">
     </side-section>
 
-    <side-section [title]="'Abonamente'"
+    <side-section [title]="SIDE_SECTION.SUBS"
                   [links]="[{id: 'sub', title: 'Abonamentul meu'}]"
-                  (linkClick)="handleLinkClick('Abonamente', $event)">
+                  (linkClick)="handleLinkClick(SIDE_SECTION.SUBS, $event)">
     </side-section>
-    <side-section [title]="'Altele'"
+    <side-section [title]="SIDE_SECTION.OTHER"
                   [links]="[{id: 'feedback', title: 'Solicitari'}, {id: 'del', title: 'Stergere cont'}]"
-                  (linkClick)="handleLinkClick('Altele', $event)">
+                  (linkClick)="handleLinkClick(SIDE_SECTION.OTHER, $event)">
     </side-section>
   </mat-drawer>
-  <mat-drawer-content>Main content</mat-drawer-content>
+  <mat-drawer-content>
+    @let content = mainContent$ | async;
+
+    @if(content) {
+    @if(content.type === 'compatibility') {
+    <div class="compatibility-info">
+      <h1 class="person-name">{{content.personName}}</h1>
+
+      @for(reason of content.reasons; track reason) {
+      <div class="reason">
+        <h3 class="reason-title">{{reason.title}}</h3>
+        <p class="reason-text">{{reason.text}}</p>
+      </div>
+      }
+
+    </div>
+
+    <h3 class="schedule-text">
+      <strong>Programează întâlnire online</strong>
+    </h3>
+    <mat-card class="inline-calendar-card">
+      <mat-calendar [selected]="content.date"
+                    (selectedChange)="onDatePicked($event, content)">
+      </mat-calendar>
+    </mat-card>
+
+    }
+    }
+
+  </mat-drawer-content>
 </mat-drawer-container>
 }
 
