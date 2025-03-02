@@ -188,12 +188,33 @@
     <h3 class="schedule-text">
       <strong>Programează întâlnire online</strong>
     </h3>
-    <mat-card class="inline-calendar-card">
-      <mat-calendar [selected]="content.date"
-                    (selectedChange)="onDatePicked($event, content)">
-      </mat-calendar>
-    </mat-card>
 
+    <div class="date-time">
+      <mat-form-field>
+        <mat-label>Data</mat-label>
+        <input matInput
+               readonly="true"
+               [matDatepicker]="datepicker"
+               (dateChange)="picked()"
+               [formControl]="date"
+               (click)="datepicker.open()">
+        <mat-datepicker #datepicker />
+        <mat-datepicker-toggle [for]="datepicker"
+                               matSuffix />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Ora</mat-label>
+        <input matInput
+               readonly="true"
+               [matTimepicker]="timepicker"
+               [formControl]="time">
+        <mat-timepicker #timepicker
+                        (selected)="picked()" />
+        <mat-timepicker-toggle [for]="timepicker"
+                               matSuffix />
+      </mat-form-field>
+    </div>
     }
     }
 

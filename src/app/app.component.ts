@@ -21,7 +21,11 @@ import { SideSectionComponent } from './side-section.component';
 import { DbService } from './db.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 export enum SIDE_SECTION {
   QUESTIONAIRES = 'Chestionare',
@@ -37,7 +41,6 @@ type ICompatibilityContent = {
   reasons: Array<{ title: string; text: string }>;
   personId: string;
   personName: string;
-  date: Date;
 };
 
 @Component({
@@ -53,6 +56,11 @@ type ICompatibilityContent = {
     UserStatusComponent,
     SideSectionComponent,
     MatCardModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatTimepickerModule,
+    MatFormFieldModule,
     MatDatepickerModule,
   ],
   providers: [provideNativeDateAdapter()],
@@ -66,6 +74,12 @@ export class AppComponent {
   mainContent$ = new BehaviorSubject<IMainContent>(null);
   dialog = inject(MatDialog);
   db = inject(DbService);
+  date = new FormControl(new Date)
+  time = new FormControl((() => {
+    const d = new Date()
+    d.setHours(0, 0, 0, 0)
+    return d
+  })());
 
   questionnaires$ = this.db.questionnaires$.pipe(
     map((links) => links.map((l) => ({ title: l, id: l })))
@@ -113,7 +127,6 @@ export class AppComponent {
     if (section === SIDE_SECTION.COMPATIBILITIES && linkId === 'Gigi Becali') {
       this.mainContent$.next({
         type: 'compatibility',
-        date: new Date(),
         reasons: [
           {
             title: 'Valorile Profunde și Credința Religioasă',
@@ -140,11 +153,11 @@ export class AppComponent {
     }
   }
 
-  onDatePicked(date: Date, content: ICompatibilityContent) {
-    this.mainContent$.next({
-      ...content,
-      date,
-    })
+  picked() {
+    setTimeout(() => {
+      console.log('Date picked:', this.date.value!.getMonth() + 1 + '/' + this.date.value?.getDate());
+      console.log('Time picked:', this.time.value!.getHours() + ':' + this.time.value?.getMinutes());
+    });
   }
 
   handleSectionButtonClick(section: SIDE_SECTION) {

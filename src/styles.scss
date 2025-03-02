@@ -211,12 +211,18 @@ app-root {
       }
 
       .schedule-text {
-        margin-top: 40px;
+        margin-top: 80px;
         margin-bottom: 20px;
       }
 
-      .inline-calendar-card {
-        width: 40%;
+      .date-time {
+        margin-top: 24px;
+        display: flex;
+        flex-direction: row;
+
+        .mat-mdc-form-field {
+          margin-right: 16px;
+        }
       }
     }
 
