@@ -171,8 +171,52 @@
   <mat-drawer-content>
     @let content = mainContent$ | async;
 
-    @if(content) {
-    @if(content.type === 'compatibility') {
+    @if(content && content.type === 'questionnaire') {
+    @let questionaire = content.q;
+    @let qIndex = content.qIndex;
+    @let question = getQuestion(content)!;
+
+    {{questionaire.title}}
+    <br>
+    {{qIndex + 1}}/{{totalQuestions(content)}}
+    <br>
+    {{getSectionTitle(content)}}
+    <br>
+    {{question.text}}
+    <br>
+
+    @if(question.type === 'select') {
+    <div class="select-q-container">
+      @if(isAllowedMultipleChoiceAnswer(question)) {
+      <div class="multiple-choice-answer">
+        @for(opt of question.options; track opt.id) {
+        <mat-checkbox>{{ opt.text }}</mat-checkbox>
+        }
+      </div>
+      } @else {
+      <div class="single-choice-answer">
+        @for(opt of question.options; track opt.id) {
+        <mat-radio-button>{{ opt.text }}</mat-radio-button>
+        }
+      </div>
+      }
+    </div>
+    }
+
+    <button mat-flat-button
+            color="primary"
+            (click)="navQuestion(-1, content)">
+      prev
+    </button>
+
+    <button mat-flat-button
+            color="primary"
+            (click)="navQuestion(1, content)">
+      next
+    </button>
+    }
+
+    @if(content && content.type === 'compatibility') {
     <div class="compatibility-info">
       <h1 class="person-name">{{content.personName}}</h1>
 
@@ -215,7 +259,6 @@
                                matSuffix />
       </mat-form-field>
     </div>
-    }
     }
 
   </mat-drawer-content>

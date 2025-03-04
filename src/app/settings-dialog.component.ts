@@ -55,7 +55,7 @@ import { DbService } from './db.service';
 export class SettingsDialog {
   dialogRef = inject(MatDialogRef<SettingsDialog>);
   db = inject(DbService);
-  initialName = this.db.userName$.value;
+  initialName = this.db.user$.value.name;
   name = new FormControl(this.initialName);
 
   constructor(
@@ -67,9 +67,9 @@ export class SettingsDialog {
 
   close() {
     if(!this.name.value) {
-      this.db.userName$.next(this.initialName);
+      this.db.user$.next({... this.db.user$.value, name: this.initialName});
     } else {
-      this.db.userName$.next(this.name.value);
+      this.db.user$.next({... this.db.user$.value, name: this.name.value});
     }
 
     this.dialogRef.close();

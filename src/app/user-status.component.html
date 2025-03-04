@@ -1,7 +1,7 @@
 <div class="icon-text-container">
   <mat-icon class="user-icon">person</mat-icon>
   <div class="text-container">
-    <h3>{{ db.userName$ | async }}</h3>
+    <h3>{{ (db.user$ | async)?.name }}</h3>
     <p class="status">{{'online'}}</p>
   </div>
 </div>

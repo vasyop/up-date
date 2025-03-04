@@ -18,7 +18,14 @@ import { BehaviorSubject, map } from 'rxjs';
 import { DIAG_WIDTH, RegisterDialog } from './register-dialog.component';
 import { UserStatusComponent } from './user-status.component';
 import { SideSectionComponent } from './side-section.component';
-import { DbService } from './db.service';
+import {
+  DbService,
+  permissions,
+  Question,
+  Questionnaire,
+  questionnaire1,
+  SelectQuestion,
+} from './db.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTimepickerModule } from '@angular/material/timepicker';
@@ -26,6 +33,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
 
 export enum SIDE_SECTION {
   QUESTIONAIRES = 'Chestionare',
@@ -34,7 +43,13 @@ export enum SIDE_SECTION {
   OTHER = 'Altele',
 }
 
-export type IMainContent = null | ICompatibilityContent;
+export type IMainContent = null | ICompatibilityContent | IQuestionnaireContent;
+
+export type IQuestionnaireContent = {
+  type: 'questionnaire';
+  q: Questionnaire;
+  qIndex: number;
+};
 
 type ICompatibilityContent = {
   type: 'compatibility';
@@ -62,6 +77,8 @@ type ICompatibilityContent = {
     MatTimepickerModule,
     MatFormFieldModule,
     MatDatepickerModule,
+    MatCheckboxModule,
+    MatRadioModule,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './app.component.html',
@@ -74,12 +91,14 @@ export class AppComponent {
   mainContent$ = new BehaviorSubject<IMainContent>(null);
   dialog = inject(MatDialog);
   db = inject(DbService);
-  date = new FormControl(new Date)
-  time = new FormControl((() => {
-    const d = new Date()
-    d.setHours(0, 0, 0, 0)
-    return d
-  })());
+  date = new FormControl(new Date());
+  time = new FormControl(
+    (() => {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d;
+    })()
+  );
 
   questionnaires$ = this.db.questionnaires$.pipe(
     map((links) => links.map((l) => ({ title: l, id: l })))
@@ -99,7 +118,10 @@ export class AppComponent {
 
     setTimeout(() => {
       this.page$.next('dashboard'); // TODO: remove this
-      this.handleLinkClick(SIDE_SECTION.COMPATIBILITIES, 'Gigi Becali'); // TODO: remove this
+      this.handleLinkClick(
+        SIDE_SECTION.QUESTIONAIRES,
+        this.db.questionnaires$.value[0]
+      ); // TODO: remove this
     }, 1000);
   }
 
@@ -148,15 +170,84 @@ export class AppComponent {
         personId: linkId,
         personName: linkId,
       });
+    } else if (section === SIDE_SECTION.QUESTIONAIRES) {
+      this.mainContent$.next({
+        type: 'questionnaire',
+        q: questionnaire1,
+        qIndex: 0,
+      });
     } else {
       this.mainContent$.next(null);
     }
   }
 
+  navQuestion(inc: number, current: IQuestionnaireContent) {
+    const newIndex = current.qIndex + inc;
+    if (newIndex < 0 || newIndex >= this.totalQuestions(current)) {
+      return;
+    }
+
+    this.mainContent$.next({
+      type: 'questionnaire',
+      q: current.q,
+      qIndex: newIndex,
+    });
+  }
+
+  getQuestion({ q, qIndex }: IQuestionnaireContent) {
+    let i = 0;
+    for (const cat of q.categories) {
+      for (const q of cat.questions) {
+        if (i === qIndex) {
+          return q;
+        }
+        i++;
+      }
+    }
+
+    return null;
+  }
+
+  getSectionTitle({ q, qIndex }: IQuestionnaireContent) {
+    let i = 0;
+    for (const cat of q.categories) {
+      for (const q of cat.questions) {
+        if (i === qIndex) {
+          return cat.name;
+        }
+        i++;
+      }
+    }
+
+    return 'bad index';
+  }
+
+  isAllowedMultipleChoiceAnswer(q: SelectQuestion) {
+    return !!q.multipleChoiceInfo?.multipleChoicePermissionsRequired?.every(
+      (p) => permissions[this.db.user$.value.sub].includes(p)
+    );
+  }
+
+  totalQuestions({ q }: IQuestionnaireContent) {
+    return q.categories.reduce((acc, cat) => acc + cat.questions.length, 0);
+  }
+
+  questionAnswerChange(qid: string, oId: string, val: boolean | string) {
+    // todo: if single choice, remove uid|qid|* entries from table
+    // todo: remove uid|qid|optId triplet from table
+    // todo: add uid|qid|optId|val to table with val val
+  }
+
   picked() {
     setTimeout(() => {
-      console.log('Date picked:', this.date.value!.getMonth() + 1 + '/' + this.date.value?.getDate());
-      console.log('Time picked:', this.time.value!.getHours() + ':' + this.time.value?.getMinutes());
+      console.log(
+        'Date picked:',
+        this.date.value!.getMonth() + 1 + '/' + this.date.value?.getDate()
+      );
+      console.log(
+        'Time picked:',
+        this.time.value!.getHours() + ':' + this.time.value?.getMinutes()
+      );
     });
   }
 
