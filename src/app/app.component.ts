@@ -8,6 +8,7 @@ import {
 import { RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -19,12 +20,14 @@ import { DIAG_WIDTH, RegisterDialog } from './register-dialog.component';
 import { UserStatusComponent } from './user-status.component';
 import { SideSectionComponent } from './side-section.component';
 import {
+  Answer,
   DbService,
+  OTHER_OPTION_ID,
   permissions,
-  Question,
   Questionnaire,
   questionnaire1,
   SelectQuestion,
+  user1,
 } from './db.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -75,6 +78,7 @@ type ICompatibilityContent = {
     ReactiveFormsModule,
     FormsModule,
     MatTimepickerModule,
+    MatProgressBarModule,
     MatFormFieldModule,
     MatDatepickerModule,
     MatCheckboxModule,
@@ -87,6 +91,7 @@ type ICompatibilityContent = {
 })
 export class AppComponent {
   SIDE_SECTION = SIDE_SECTION;
+  OTHER_OPTION_ID = OTHER_OPTION_ID;
   page$ = new BehaviorSubject<'regLog' | 'about' | 'dashboard'>('regLog');
   mainContent$ = new BehaviorSubject<IMainContent>(null);
   dialog = inject(MatDialog);
@@ -188,8 +193,7 @@ export class AppComponent {
     }
 
     this.mainContent$.next({
-      type: 'questionnaire',
-      q: current.q,
+      ...current,
       qIndex: newIndex,
     });
   }
@@ -220,6 +224,94 @@ export class AppComponent {
     }
 
     return 'bad index';
+  }
+
+  hasOpenAnswer() {
+    const content = this.mainContent$.value;
+    if (!content || content.type !== 'questionnaire') {
+      return false;
+    }
+
+    const q = this.getQuestion(content);
+    if (!q) {
+      return false;
+    }
+
+    return !!this.myUserAnswers().find(
+      (a) => a.qId === q.id && a.oId === OTHER_OPTION_ID
+    );
+  }
+
+  myUserAnswers() {
+    return this.db.answers$.value.filter((a) => a.uId === user1.phone);
+  }
+
+  getOptionValue(optId: string) {
+    const content = this.mainContent$.value;
+    if (!content || content.type !== 'questionnaire') {
+      return;
+    }
+
+    const q = this.getQuestion(content);
+    if (!q) {
+      return;
+    }
+
+    const a = this.myUserAnswers().find((a) => a.qId === q.id && a.oId === optId);
+    return a?.value ?? false;
+  }
+
+  val(el: EventTarget | null) {
+    if (el instanceof HTMLTextAreaElement) return el.value;
+
+    return '';
+  }
+
+  saveAnswer(oId: string, value: boolean | string) {
+    const content = this.mainContent$.value;
+    if (!content || content.type !== 'questionnaire') {
+      return;
+    }
+
+    const q = this.getQuestion(content);
+    if (!q || q.type !== 'select') {
+      return;
+    }
+
+    const multiple = this.isAllowedMultipleChoiceAnswer(q);
+
+    if (multiple) {
+      const a = this.myUserAnswers().find((a) => a.qId === q.id && a.oId === oId);
+      if (a) {
+        a.value = value;
+        this.db.answers$.next(this.db.answers$.value);
+      } else {
+        this.db.answers$.next([
+          ...this.db.answers$.value,
+          {
+            uId: user1.phone,
+            qId: q.id,
+            oId,
+            value,
+          }
+        ])
+      }
+    } else {
+      const arr: Answer[] = [{
+        uId: user1.phone,
+        qId: q.id,
+        oId,
+        value,
+      }];
+
+      for(const a of this.db.answers$.value) {
+        if(a.uId !== user1.phone || a.qId !== q.id) {
+          arr.push(a);
+        }
+      }
+
+      this.db.answers$.next(arr);
+    }
   }
 
   isAllowedMultipleChoiceAnswer(q: SelectQuestion) {

@@ -1,2 +1,1 @@
-gpt - generate a crud app to edit questionaires
 ngrok

@@ -1,4 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+:root {
+  @include mat.progress-bar-overrides((
+    active-indicator-color: '#090',
+  ));
+}
 
 @font-face {
   font-family: 'Galanogrotesque';
@@ -193,8 +200,48 @@ app-root {
     }
 
     .mat-drawer-content {
+      h2,h4,h1 {
+        color: #4f4f4f
+      }
+
       padding-left: 100px;
       padding-right: 100px;
+      display: flex;
+      flex-direction: column;
+
+      .q-title {
+        margin-top: 40px;
+      }
+
+      .progress-text {
+        text-align: end;
+        margin-bottom: 20px;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .mat-mdc-progress-bar {
+        flex-shrink: 0;
+      }
+
+      .q-text.spacing {
+        margin-top: 20px;
+      }
+
+      .area {
+        margin-top: 40px;
+
+        textarea {
+          min-height: 150px;
+        }
+      }
+
+      .buttons {
+        margin-top: auto;
+        margin-bottom: 40px;
+        display: flex;
+        justify-content: space-between;
+      }
 
       .compatibility-info {
         .person-name {

@@ -176,44 +176,84 @@
     @let qIndex = content.qIndex;
     @let question = getQuestion(content)!;
 
-    {{questionaire.title}}
+    <h1 class="q-title">{{questionaire.title}}</h1>
     <br>
-    {{qIndex + 1}}/{{totalQuestions(content)}}
+
+    <div class="progress-text">{{qIndex + 1}}/{{totalQuestions(content)}}</div>
+
+    <mat-progress-bar mode="determinate"
+                      [color]="'#080'"
+                      [value]="(qIndex + 1) / totalQuestions(content) * 100" />
     <br>
-    {{getSectionTitle(content)}}
-    <br>
-    {{question.text}}
-    <br>
+
+    @let sub = getSectionTitle(content);
+    @if(sub) {
+    <h2 class="q-subtitle">{{sub}}</h2>
+    }
+
+    <h4 class="q-text"
+        [class.spacing]="!sub">
+      {{question.text}}
+    </h4>
 
     @if(question.type === 'select') {
     <div class="select-q-container">
       @if(isAllowedMultipleChoiceAnswer(question)) {
       <div class="multiple-choice-answer">
         @for(opt of question.options; track opt.id) {
-        <mat-checkbox>{{ opt.text }}</mat-checkbox>
+        <mat-checkbox (change)="saveAnswer(opt.id, $event.checked)"
+                      [checked]="getOptionValue(opt.id)">
+          {{ opt.text }}
+        </mat-checkbox>
+        <br>
         }
       </div>
       } @else {
       <div class="single-choice-answer">
         @for(opt of question.options; track opt.id) {
-        <mat-radio-button>{{ opt.text }}</mat-radio-button>
+        <mat-radio-button (change)="saveAnswer(opt.id, $event.source['checked'])"
+                          [checked]="getOptionValue(opt.id)">
+          {{ opt.text }}
+        </mat-radio-button>
+        <br>
         }
       </div>
       }
     </div>
+
+    <ng-container>
+      @if(question.openAnswerInfo) {
+      <mat-radio-button (change)="saveAnswer(OTHER_OPTION_ID, $event.source['checked'] ? '' : false)"
+                        [checked]="!!getOptionValue(OTHER_OPTION_ID) || getOptionValue(OTHER_OPTION_ID) === ''"
+                        #btn>{{ question.openAnswerInfo.text }}</mat-radio-button>
+
+      @if(hasOpenAnswer()) {
+      <mat-form-field class="area">
+        <textarea matInput
+                  [value]="getOptionValue(OTHER_OPTION_ID)"
+                  (input)="saveAnswer(OTHER_OPTION_ID, val($event.target))">
+        </textarea>
+      </mat-form-field>
+      }
+      }
+    </ng-container>
+
     }
 
-    <button mat-flat-button
-            color="primary"
-            (click)="navQuestion(-1, content)">
-      prev
-    </button>
+    <div class="buttons">
 
-    <button mat-flat-button
-            color="primary"
-            (click)="navQuestion(1, content)">
-      next
-    </button>
+      <button mat-flat-button
+              color="primary"
+              (click)="navQuestion(-1, content)">
+        Înapoi
+      </button>
+
+      <button mat-flat-button
+              color="primary"
+              (click)="navQuestion(1, content)">
+        Înainte
+      </button>
+    </div>
     }
 
     @if(content && content.type === 'compatibility') {
