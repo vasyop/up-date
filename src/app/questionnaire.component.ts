@@ -145,6 +145,11 @@ export class QuestionnaireComponent {
       return;
     }
 
+    if(value === false) {
+      this.db.answers$.next(this.db.answers$.value.filter((a) => !(a.oId === oId && a.qId === q.id)));
+      return;
+    }
+
     const multiple = this.isAllowedMultipleChoiceAnswer(q);
 
     if (multiple) {

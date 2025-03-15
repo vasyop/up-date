@@ -58,7 +58,7 @@ export type Answer = {
   uId: string; // user id (phone)
   qId: string; // question id
   oId: '@other' | string; // option id
-  value: boolean | string; // string for @other
+  value: true | string; // string for @other
 };
 
 export const user1: User = {
@@ -103,6 +103,9 @@ export const questionnaire1: Questionnaire = {
               text: 'Persoane celebre',
             },
           ],
+          multipleChoiceInfo: {
+            multipleChoicePermissionsRequired: ['multiple-categories'],
+          },
         },
         {
           id: 'categorie-partener',
