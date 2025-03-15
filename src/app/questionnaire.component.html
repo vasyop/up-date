@@ -69,12 +69,14 @@
 <div class="buttons">
   <button mat-flat-button
           color="primary"
+          [style.visibility]="qIndex === 0 ? 'hidden' : 'visible'"
           (click)="navQuestion(-1, content)">
     Înapoi
   </button>
 
   <button mat-flat-button
           color="primary"
+          [style.visibility]="qIndex === totalQuestions(content) - 1 ? 'hidden' : 'visible'"
           (click)="navQuestion(1, content)">
     Înainte
   </button>
