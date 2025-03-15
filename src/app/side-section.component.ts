@@ -5,7 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'side-section',
-  standalone: true,
   imports: [CommonModule, MatButtonModule, MatIconModule],
   encapsulation: ViewEncapsulation.None,
   templateUrl: './side-section.component.html',

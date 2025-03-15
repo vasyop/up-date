@@ -1,0 +1,39 @@
+<mat-drawer-container class="dashboard-container">
+  <mat-drawer mode="side"
+              opened>
+    <user-status />
+    <side-section *ngIf="questionnairesTitles$ | async as qTitles"
+                  [title]="SIDE_SECTION.QUESTIONAIRES"
+                  [buttonText]="'add'"
+                  [links]="qTitles"
+                  (buttonClick)="handleSectionButtonClick(SIDE_SECTION.QUESTIONAIRES)"
+                  (linkClick)="handleLinkClick(SIDE_SECTION.QUESTIONAIRES, $event)">
+    </side-section>
+
+    <side-section [title]="SIDE_SECTION.COMPATIBILITIES"
+                  [links]="compatibilities"
+                  (linkClick)="handleLinkClick(SIDE_SECTION.COMPATIBILITIES, $event)">
+    </side-section>
+
+    <side-section [title]="SIDE_SECTION.SUBS"
+                  [links]="[{id: 'sub', title: 'Abonamentul meu'}]"
+                  (linkClick)="handleLinkClick(SIDE_SECTION.SUBS, $event)">
+    </side-section>
+    <side-section [title]="SIDE_SECTION.OTHER"
+                  [links]="[{id: 'feedback', title: 'Solicitari'}, {id: 'del', title: 'Stergere cont'}]"
+                  (linkClick)="handleLinkClick(SIDE_SECTION.OTHER, $event)">
+    </side-section>
+  </mat-drawer>
+  <mat-drawer-content>
+    @let content = content$ | async;
+
+    @if(content && content.type === 'questionnaire') {
+      <app-questionnaire [content]="content"/>
+    }
+
+    @if(content && content.type === 'compatibility') {
+      <app-compatibility [content]="content"/>
+    }
+
+  </mat-drawer-content>
+</mat-drawer-container>

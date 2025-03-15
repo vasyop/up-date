@@ -564,14 +564,7 @@ export class DbService {
   user$ = new BehaviorSubject(user1);
   answers$ = new BehaviorSubject<Answer[]>([]);
 
-  questionnaires$ = new BehaviorSubject([
-    questionnaire1.title,
-  ]);
-  compatibilities$ = new BehaviorSubject([
-    'Gigi Becali',
-    'Florin Citu',
-    'Ana Blandiana',
-  ]);
+  questionnaires$ = new BehaviorSubject([questionnaire1]);
 
   constructor() {
     // TODO: this will surely break once the model changes
