@@ -1,6 +1,6 @@
 @let questionaire = content.q;
 @let qIndex = content.qIndex;
-@let question = getQuestion(content)!;
+@let q = getQuestion(content)!;
 
 <h1 class="q-title">{{questionaire.title}}</h1>
 <br>
@@ -19,50 +19,64 @@
 
 <h4 class="q-text"
     [class.spacing]="!sub">
-  {{question.text}}
+  {{q.text}}
 </h4>
 
-@if(question.type === 'select') {
-@let multiple = isAllowedMultipleChoiceAnswer(question);
+@if(q.type === 'select') {
+@let multiple = isAllowedMultipleChoiceAnswer(q);
 
-<div class="select-q-container">
-  @if(multiple) {
-  <div class="multiple-choice-answer">
-    @for(opt of question.options; track opt.id) {
-    <mat-checkbox (change)="saveAnswer(opt.id, $event.checked)"
-                  [checked]="getOptionValue(opt.id) ?? false">
-      {{ opt.text }}
-    </mat-checkbox>
-    <br>
-    }
-  </div>
+
+@if(multiple) {
+<div>
+  @for(opt of q.options; track opt.id) {
+  <mat-checkbox (change)="saveAnswer(opt.id, $event.checked)"
+                [checked]="getOptionValue(opt.id) ?? false">
+    {{ opt.text }}
+  </mat-checkbox>
+  <br>
+  }
+</div>
+} @else {
+<ng-container>
+  @if(q.preferDropdown && !q.multipleChoiceInfo && !q.openAnswerInfo) {
+  <mat-form-field>
+    <mat-select placeholder="Selectați"
+                [value]="findFirstAnswer(q)?.oId"
+                (selectionChange)="saveAnswer($event.value, true)">
+      @for(opt of q.options; track opt.id) {
+      <mat-option [value]="opt.id">
+        {{ opt.text }}
+      </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
   } @else {
-  <div class="single-choice-answer">
-    @for(opt of question.options; track opt.id) {
-    <mat-radio-button (change)="saveAnswer(opt.id, $event.source['checked'])"
+  <ng-container>
+    @for(opt of q.options; track opt.id) {
+    <mat-radio-button (change)="saveAnswer(opt.id, true)"
                       [checked]="getOptionValue(opt.id) ?? false">
       {{ opt.text }}
     </mat-radio-button>
-    <br>
     }
-  </div>
+  </ng-container>
   }
-</div>
+</ng-container>
+}
 
 <ng-container>
   @let txtVal = getOptionValue(OTHER_OPTION_ID);
   @let openAnsChecked = txtVal != null;
 
-  @if (question.openAnswerInfo) {
+  @if (q.openAnswerInfo) {
   @if(multiple) {
   <mat-checkbox (change)="saveAnswer(OTHER_OPTION_ID, $event.checked ? '' : false)"
                 [checked]="openAnsChecked">
-    {{ question.openAnswerInfo.text }}
+    {{ q.openAnswerInfo.text }}
   </mat-checkbox>
   } @else {
-  <mat-radio-button (change)="saveAnswer(OTHER_OPTION_ID, $event.source['checked'] ? '' : false)"
+  <mat-radio-button (change)="saveAnswer(OTHER_OPTION_ID, '')"
                     [checked]="openAnsChecked">
-    {{ question.openAnswerInfo.text }}
+    {{ q.openAnswerInfo.text }}
   </mat-radio-button>
   }
 

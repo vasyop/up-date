@@ -35,6 +35,7 @@ export interface SelectQuestion {
   openAnswerInfo?: {
     text: string;
   };
+  preferDropdown?: true; // if no open answer and no multiple choice, render as dropdown
 }
 export interface OrderQuestion {
   type: 'order';
@@ -292,6 +293,7 @@ export const questionnaire1: Questionnaire = {
           id: 'În ce județ locuiești?',
           text: 'În ce județ locuiești?',
           type: 'select',
+          preferDropdown: true,
           options: [
             { id: 'B', text: 'București' },
             { id: 'AB', text: 'Alba' },

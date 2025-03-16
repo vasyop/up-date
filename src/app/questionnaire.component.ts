@@ -7,6 +7,7 @@ import {
   permissions,
   user1,
   DbService,
+  Question,
 } from './db.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -24,10 +25,12 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-questionnaire',
   imports: [
+    MatSelectModule,
     CommonModule,
     MatMenuModule,
     MatIconModule,
@@ -151,6 +154,10 @@ export class QuestionnaireComponent {
         }
       ]);
     }
+  }
+
+  findFirstAnswer(q: Question) {
+    return this.db.answers$.value.find((a) => a.uId === user1.phone && a.qId === q.id)
   }
 
   isAllowedMultipleChoiceAnswer(q: SelectQuestion) {
