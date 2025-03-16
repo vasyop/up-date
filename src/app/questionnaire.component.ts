@@ -91,7 +91,7 @@ export class QuestionnaireComponent {
     return 'bad index';
   }
 
-  hasOpenAnswer() {
+  renderOpenAnswer() {
     const content = this.content;
     if (!content || content.type !== 'questionnaire') {
       return false;
@@ -102,13 +102,9 @@ export class QuestionnaireComponent {
       return false;
     }
 
-    return !!this.myUserAnswers().find(
-      (a) => a.qId === q.id && a.oId === OTHER_OPTION_ID
+    return !!this.db.answers$.value.find(
+      (a) => a.qId === q.id && a.oId === OTHER_OPTION_ID && a.uId === user1.phone
     );
-  }
-
-  myUserAnswers() {
-    return this.db.answers$.value.filter((a) => a.uId === user1.phone);
   }
 
   getOptionValue(optId: string) {
@@ -122,8 +118,8 @@ export class QuestionnaireComponent {
       return;
     }
 
-    const a = this.myUserAnswers().find(
-      (a) => a.qId === q.id && a.oId === optId
+    const a = this.db.answers$.value.find(
+      (a) => a.qId === q.id && a.oId === optId && a.uId === user1.phone
     );
     return a?.value ?? false;
   }
@@ -135,58 +131,41 @@ export class QuestionnaireComponent {
   }
 
   saveAnswer(oId: string, value: boolean | string) {
-    const content = this.content;
-    if (!content || content.type !== 'questionnaire') {
+    if (!this.content || this.content.type !== 'questionnaire') {
       return;
     }
 
-    const q = this.getQuestion(content);
+    const q = this.getQuestion(this.content);
     if (!q || q.type !== 'select') {
       return;
     }
 
     if(value === false) {
-      this.db.answers$.next(this.db.answers$.value.filter((a) => !(a.oId === oId && a.qId === q.id)));
+      this.db.answers$.next(this.db.answers$.value.filter((a) => !(a.uId === user1.phone && a.oId === oId && a.qId === q.id)));
       return;
     }
 
-    const multiple = this.isAllowedMultipleChoiceAnswer(q);
-
-    if (multiple) {
-      const a = this.myUserAnswers().find(
-        (a) => a.qId === q.id && a.oId === oId
-      );
-      if (a) {
-        a.value = value;
-        this.db.answers$.next(this.db.answers$.value);
-      } else {
-        this.db.answers$.next([
-          ...this.db.answers$.value,
-          {
-            uId: user1.phone,
-            qId: q.id,
-            oId,
-            value,
-          },
-        ]);
-      }
-    } else {
-      const arr: Answer[] = [
+    if (this.isAllowedMultipleChoiceAnswer(q)) {
+      this.db.answers$.next([
+        ...this.db.answers$.value.filter((a) => !(a.uId === user1.phone && a.qId === q.id && a.oId === oId)),
         {
           uId: user1.phone,
           qId: q.id,
           oId,
           value,
-        },
-      ];
-
-      for (const a of this.db.answers$.value) {
-        if (a.uId !== user1.phone || a.qId !== q.id) {
-          arr.push(a);
         }
-      }
+      ]);
 
-      this.db.answers$.next(arr);
+    } else {
+      this.db.answers$.next([
+        ...this.db.answers$.value.filter((a) => !(a.uId === user1.phone && a.qId === q.id)),
+        {
+          uId: user1.phone,
+          qId: q.id,
+          oId,
+          value,
+        }
+      ]);
     }
   }
 

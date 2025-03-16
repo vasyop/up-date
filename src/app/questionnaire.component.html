@@ -53,7 +53,7 @@
                     [checked]="!!getOptionValue(OTHER_OPTION_ID) || getOptionValue(OTHER_OPTION_ID) === ''"
                     #btn>{{ question.openAnswerInfo.text }}</mat-radio-button>
 
-  @if(hasOpenAnswer()) {
+  @if(renderOpenAnswer()) {
   <mat-form-field class="area">
     <textarea matInput
               [value]="getOptionValue(OTHER_OPTION_ID)"
