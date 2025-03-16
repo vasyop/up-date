@@ -91,22 +91,6 @@ export class QuestionnaireComponent {
     return 'bad index';
   }
 
-  renderOpenAnswer() {
-    const content = this.content;
-    if (!content || content.type !== 'questionnaire') {
-      return false;
-    }
-
-    const q = this.getQuestion(content);
-    if (!q) {
-      return false;
-    }
-
-    return !!this.db.answers$.value.find(
-      (a) => a.qId === q.id && a.oId === OTHER_OPTION_ID && a.uId === user1.phone
-    );
-  }
-
   getOptionValue(optId: string) {
     const content = this.content;
     if (!content || content.type !== 'questionnaire') {
@@ -121,7 +105,7 @@ export class QuestionnaireComponent {
     const a = this.db.answers$.value.find(
       (a) => a.qId === q.id && a.oId === optId && a.uId === user1.phone
     );
-    return a?.value ?? false;
+    return a?.value;
   }
 
   val(el: EventTarget | null) {
@@ -130,7 +114,7 @@ export class QuestionnaireComponent {
     return '';
   }
 
-  saveAnswer(oId: string, value: boolean | string) {
+  saveAnswer(oId: string, value: boolean | string) { // value false means remove answer entry
     if (!this.content || this.content.type !== 'questionnaire') {
       return;
     }

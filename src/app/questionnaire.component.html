@@ -23,12 +23,14 @@
 </h4>
 
 @if(question.type === 'select') {
+@let multiple = isAllowedMultipleChoiceAnswer(question);
+
 <div class="select-q-container">
-  @if(isAllowedMultipleChoiceAnswer(question)) {
+  @if(multiple) {
   <div class="multiple-choice-answer">
     @for(opt of question.options; track opt.id) {
     <mat-checkbox (change)="saveAnswer(opt.id, $event.checked)"
-                  [checked]="getOptionValue(opt.id)">
+                  [checked]="getOptionValue(opt.id) ?? false">
       {{ opt.text }}
     </mat-checkbox>
     <br>
@@ -38,7 +40,7 @@
   <div class="single-choice-answer">
     @for(opt of question.options; track opt.id) {
     <mat-radio-button (change)="saveAnswer(opt.id, $event.source['checked'])"
-                      [checked]="getOptionValue(opt.id)">
+                      [checked]="getOptionValue(opt.id) ?? false">
       {{ opt.text }}
     </mat-radio-button>
     <br>
@@ -48,15 +50,26 @@
 </div>
 
 <ng-container>
-  @if(question.openAnswerInfo) {
-  <mat-radio-button (change)="saveAnswer(OTHER_OPTION_ID, $event.source['checked'] ? '' : false)"
-                    [checked]="!!getOptionValue(OTHER_OPTION_ID) || getOptionValue(OTHER_OPTION_ID) === ''"
-                    #btn>{{ question.openAnswerInfo.text }}</mat-radio-button>
+  @let txtVal = getOptionValue(OTHER_OPTION_ID);
+  @let openAnsChecked = txtVal != null;
 
-  @if(renderOpenAnswer()) {
+  @if (question.openAnswerInfo) {
+  @if(multiple) {
+  <mat-checkbox (change)="saveAnswer(OTHER_OPTION_ID, $event.checked ? '' : false)"
+                [checked]="openAnsChecked">
+    {{ question.openAnswerInfo.text }}
+  </mat-checkbox>
+  } @else {
+  <mat-radio-button (change)="saveAnswer(OTHER_OPTION_ID, $event.source['checked'] ? '' : false)"
+                    [checked]="openAnsChecked">
+    {{ question.openAnswerInfo.text }}
+  </mat-radio-button>
+  }
+
+  @if(openAnsChecked) {
   <mat-form-field class="area">
     <textarea matInput
-              [value]="getOptionValue(OTHER_OPTION_ID)"
+              [value]="txtVal"
               (input)="saveAnswer(OTHER_OPTION_ID, val($event.target))">
     </textarea>
   </mat-form-field>
