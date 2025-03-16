@@ -8,6 +8,7 @@ import {
   user1,
   DbService,
   Question,
+  SelectAnswer,
 } from './db.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -106,9 +107,9 @@ export class QuestionnaireComponent {
     }
 
     const a = this.db.answers$.value.find(
-      (a) => a.qId === q.id && a.oId === optId && a.uId === user1.phone
+      (a) => a.type === 'select' && a.qId === q.id && a.oId === optId && a.uId === user1.phone
     );
-    return a?.value;
+    return a?.type === 'select' ? a?.value : undefined;
   }
 
   val(el: EventTarget | null) {
@@ -127,15 +128,18 @@ export class QuestionnaireComponent {
       return;
     }
 
+    const currentheckedOptionAnswer = (a: Answer) => a.type === 'select' && a.uId === user1.phone && a.qId === q.id && a.oId === oId
+
     if(value === false) {
-      this.db.answers$.next(this.db.answers$.value.filter((a) => !(a.uId === user1.phone && a.oId === oId && a.qId === q.id)));
+      this.db.answers$.next(this.db.answers$.value.filter((a) => !currentheckedOptionAnswer(a)));
       return;
     }
 
     if (this.isAllowedMultipleChoiceAnswer(q)) {
       this.db.answers$.next([
-        ...this.db.answers$.value.filter((a) => !(a.uId === user1.phone && a.qId === q.id && a.oId === oId)),
+        ...this.db.answers$.value.filter((a) => !currentheckedOptionAnswer(a)),
         {
+          type: 'select',
           uId: user1.phone,
           qId: q.id,
           oId,
@@ -147,6 +151,7 @@ export class QuestionnaireComponent {
       this.db.answers$.next([
         ...this.db.answers$.value.filter((a) => !(a.uId === user1.phone && a.qId === q.id)),
         {
+          type: 'select',
           uId: user1.phone,
           qId: q.id,
           oId,
@@ -156,8 +161,12 @@ export class QuestionnaireComponent {
     }
   }
 
-  findFirstAnswer(q: Question) {
-    return this.db.answers$.value.find((a) => a.uId === user1.phone && a.qId === q.id)
+  findFirstSelectAnswer(q: Question) {
+    const ans = this.db.answers$.value.find((a) => a.uId === user1.phone && a.qId === q.id)
+    if(ans?.type === 'select') {
+      return ans;
+    }
+    return undefined;
   }
 
   isAllowedMultipleChoiceAnswer(q: SelectQuestion) {

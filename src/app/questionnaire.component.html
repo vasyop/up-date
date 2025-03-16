@@ -41,7 +41,7 @@
   @if(q.preferDropdown && !q.multipleChoiceInfo && !q.openAnswerInfo) {
   <mat-form-field>
     <mat-select placeholder="Selectați"
-                [value]="findFirstAnswer(q)?.oId"
+                [value]="findFirstSelectAnswer(q)?.oId"
                 (selectionChange)="saveAnswer($event.value, true)">
       @for(opt of q.options; track opt.id) {
       <mat-option [value]="opt.id">

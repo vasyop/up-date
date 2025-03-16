@@ -54,13 +54,21 @@ export interface Option {
 
 export const OTHER_OPTION_ID = '@other';
 
-// only works for SelectQuestion for now
+export type SelectAnswer = {
+  type: 'select';
+  oId: '@other' | string; // option id
+  value: true | string; // string for @other
+}
+
+export type OrderAnswer = {
+  type: 'order';
+  order: string[];
+}
+
 export type Answer = {
   uId: string; // user id (phone)
   qId: string; // question id
-  oId: '@other' | string; // option id
-  value: true | string; // string for @other
-};
+} & (SelectAnswer | OrderAnswer);
 
 export const user1: User = {
   phone: '0123456789',
