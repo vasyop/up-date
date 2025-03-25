@@ -62,7 +62,7 @@ export type SelectAnswer = {
 
 export type OrderAnswer = {
   type: 'order';
-  order: string[];
+  order: string[]; // ids
 }
 
 export type Answer = {
@@ -246,23 +246,23 @@ export const questionnaire1: Questionnaire = {
           type: 'order',
           options: [
             {
-              id: '<strong>Comunicare și sinceritate</strong>: „Este esențial să putem vorbi deschis și sincer.”',
+              id: 'com-sin',
               text: '<strong>Comunicare și sinceritate</strong>: „Este esențial să putem vorbi deschis și sincer.”',
             },
             {
-              id: '<strong>Respect și încredere</strong>: „Respectul și încrederea sunt fundamentale.”',
+              id: 'resp-inc',
               text: '<strong>Respect și încredere</strong>: „Respectul și încrederea sunt fundamentale.”',
             },
             {
-              id: '<strong>Sprijin emoțional</strong>: „Vreau un partener care mă susține și mă înțelege.”',
+              id: 'spri-emo',
               text: '<strong>Sprijin emoțional</strong>: „Vreau un partener care mă susține și mă înțelege.”',
             },
             {
-              id: '<strong>Compromisuri și echilibru</strong>: „Este important să facem compromisuri și să ne respectăm.”',
+              id: 'comp-ech',
               text: '<strong>Compromisuri și echilibru</strong>: „Este important să facem compromisuri și să ne respectăm.”',
             },
             {
-              id: '<strong>Afecțiune și timp împreună</strong>: „Gesturile mici de afecțiune și timpul petrecut împreună sunt esențiale.”',
+              id: 'afec-timp',
               text: '<strong>Afecțiune și timp împreună</strong>: „Gesturile mici de afecțiune și timpul petrecut împreună sunt esențiale.”',
             },
           ],

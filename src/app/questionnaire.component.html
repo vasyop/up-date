@@ -22,6 +22,22 @@
   {{q.text}}
 </h4>
 
+@if(q.type === 'order') {
+<div class="order-q">
+  <div cdkDropList
+       class="order-q-list"
+       (cdkDropListDropped)="reorder($event)">
+    @for(optID of currentOrder(q); track optID) {
+    <div class="order-q-box"
+         [attr.data-opt-id]="optID"
+         [innerHTML]="findText(q, optID)"
+         cdkDrag>
+    </div>
+    }
+  </div>
+</div>
+}
+
 @if(q.type === 'select') {
 @let multiple = isAllowedMultipleChoiceAnswer(q);
 

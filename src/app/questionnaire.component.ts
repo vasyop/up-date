@@ -27,10 +27,13 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
+import {CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-questionnaire',
   imports: [
+    CdkDropList,
+    CdkDrag,
     MatSelectModule,
     CommonModule,
     MatMenuModule,
@@ -159,6 +162,38 @@ export class QuestionnaireComponent {
         }
       ]);
     }
+  }
+
+  reorder(event: CdkDragDrop<string[]>) {
+    const q = this.getQuestion(this.content);
+    if (!q || q.type !== 'order') {
+      return;
+    }
+
+    const newOrder = this.currentOrder(q);
+    moveItemInArray(newOrder, event.previousIndex, event.currentIndex);
+
+    const ans = this.db.answers$.value.find((a) => a.type === 'order' && a.uId === user1.phone && a.qId === q.id);
+    if(ans?.type === 'order') {
+      ans.order = newOrder;
+      this.db.answers$.next(this.db.answers$.value.filter((a) => a !== ans).concat([ans]));
+    } else {
+      this.db.answers$.next(this.db.answers$.value.concat([{
+        type: 'order',
+        uId: user1.phone,
+        qId: q.id,
+        order: newOrder,
+      }]));
+    }
+  }
+
+  currentOrder(q: Question) {
+    const ans = this.db.answers$.value.find((a) => a.type === 'order' && a.uId === user1.phone && a.qId === q.id);
+    return ans?.type === 'order' ? ans.order : q.options.map((o) => o.id);
+  }
+
+  findText(q: Question, id: string) {
+    return q.options.find((o) => o.id === id)?.text;
   }
 
   findFirstSelectAnswer(q: Question) {
