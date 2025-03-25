@@ -117,11 +117,15 @@ export class QuestionnaireComponent {
       return a.value;
     }
 
-    if(q.type === 'select' && !q.multipleChoiceInfo && q.openAnswerInfo && !q.options.length) {
+    if(this.isSingleOpenAnser(q)) {
       return '';
     }
 
     return undefined;
+  }
+
+  isSingleOpenAnser(q: Question) {
+    return q.type === 'select' && !q.multipleChoiceInfo && q.openAnswerInfo && !q.options.length;
   }
 
   val(el: EventTarget | null) {

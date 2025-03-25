@@ -89,7 +89,7 @@
                 [checked]="openAnsChecked">
     {{ q.openAnswerInfo.text }}
   </mat-checkbox>
-  } @else {
+  } @else if (!isSingleOpenAnser(q)) {
   <mat-radio-button (change)="saveAnswer(OTHER_OPTION_ID, '')"
                     [checked]="openAnsChecked">
     {{ q.openAnswerInfo.text }}
@@ -97,7 +97,8 @@
   }
 
   @if(openAnsChecked) {
-  <mat-form-field class="area">
+  <mat-form-field class="area"
+                  [class.single]="!!isSingleOpenAnser(q)">
     <textarea matInput
               [value]="txtVal"
               (input)="saveAnswer(OTHER_OPTION_ID, val($event.target))">

@@ -58,12 +58,12 @@ export type SelectAnswer = {
   type: 'select';
   oId: '@other' | string; // option id
   value: true | string; // string for @other
-}
+};
 
 export type OrderAnswer = {
   type: 'order';
   order: string[]; // ids
-}
+};
 
 export type Answer = {
   uId: string; // user id (phone)
@@ -204,10 +204,217 @@ export const questionnaire1: Questionnaire = {
           id: 'varsta-eu',
           text: 'Ce vârstă ai?',
           type: 'select',
-          openAnswerInfo: {
-            text: 'Scrie',
-          },
-          options: [],
+          preferDropdown: true,
+          options: [
+            {
+              id: '18',
+              text: '18',
+            },
+            {
+              id: '19',
+              text: '19',
+            },
+            {
+              id: '20',
+              text: '20',
+            },
+            {
+              id: '21',
+              text: '21',
+            },
+            {
+              id: '22',
+              text: '22',
+            },
+            {
+              id: '23',
+              text: '23',
+            },
+            {
+              id: '24',
+              text: '24',
+            },
+            {
+              id: '25',
+              text: '25',
+            },
+            {
+              id: '26',
+              text: '26',
+            },
+            {
+              id: '27',
+              text: '27',
+            },
+            {
+              id: '28',
+              text: '28',
+            },
+            {
+              id: '29',
+              text: '29',
+            },
+            {
+              id: '30',
+              text: '30',
+            },
+            {
+              id: '31',
+              text: '31',
+            },
+            {
+              id: '32',
+              text: '32',
+            },
+            {
+              id: '33',
+              text: '33',
+            },
+            {
+              id: '34',
+              text: '34',
+            },
+            {
+              id: '35',
+              text: '35',
+            },
+            {
+              id: '36',
+              text: '36',
+            },
+            {
+              id: '37',
+              text: '37',
+            },
+            {
+              id: '38',
+              text: '38',
+            },
+            {
+              id: '39',
+              text: '39',
+            },
+            {
+              id: '40',
+              text: '40',
+            },
+            {
+              id: '41',
+              text: '41',
+            },
+            {
+              id: '42',
+              text: '42',
+            },
+            {
+              id: '43',
+              text: '43',
+            },
+            {
+              id: '44',
+              text: '44',
+            },
+            {
+              id: '45',
+              text: '45',
+            },
+            {
+              id: '46',
+              text: '46',
+            },
+            {
+              id: '47',
+              text: '47',
+            },
+            {
+              id: '48',
+              text: '48',
+            },
+            {
+              id: '49',
+              text: '49',
+            },
+            {
+              id: '50',
+              text: '50',
+            },
+            {
+              id: '51',
+              text: '51',
+            },
+            {
+              id: '52',
+              text: '52',
+            },
+            {
+              id: '53',
+              text: '53',
+            },
+            {
+              id: '54',
+              text: '54',
+            },
+            {
+              id: '55',
+              text: '55',
+            },
+            {
+              id: '56',
+              text: '56',
+            },
+            {
+              id: '57',
+              text: '57',
+            },
+            {
+              id: '58',
+              text: '58',
+            },
+            {
+              id: '59',
+              text: '59',
+            },
+            {
+              id: '60',
+              text: '60',
+            },
+            {
+              id: '61',
+              text: '61',
+            },
+            {
+              id: '62',
+              text: '62',
+            },
+            {
+              id: '63',
+              text: '63',
+            },
+            {
+              id: '64',
+              text: '64',
+            },
+            {
+              id: '65',
+              text: '65',
+            },
+            {
+              id: '66',
+              text: '66',
+            },
+            {
+              id: '67',
+              text: '67',
+            },
+            {
+              id: '68',
+              text: '68',
+            },
+            {
+              id: '69',
+              text: '69',
+            },
+          ],
         },
         {
           id: 'varsta-partener',
@@ -349,7 +556,7 @@ export const questionnaire1: Questionnaire = {
         },
         {
           id: 'timp',
-          text: 'Ce timp îți ia pentru a decide dacă te potrivești sau nu cu partenerul/partenera?',
+          text: 'Cât timp îți ia pentru a decide dacă te potrivești sau nu cu partenerul/partenera?',
           type: 'select',
           openAnswerInfo: {
             text: 'Scrie',
