@@ -112,7 +112,16 @@ export class QuestionnaireComponent {
     const a = this.db.answers$.value.find(
       (a) => a.type === 'select' && a.qId === q.id && a.oId === optId && a.uId === user1.phone
     );
-    return a?.type === 'select' ? a?.value : undefined;
+
+    if(a?.type === 'select') {
+      return a.value;
+    }
+
+    if(q.type === 'select' && !q.multipleChoiceInfo && q.openAnswerInfo && !q.options.length) {
+      return '';
+    }
+
+    return undefined;
   }
 
   val(el: EventTarget | null) {
