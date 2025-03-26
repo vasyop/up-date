@@ -53,7 +53,6 @@ module.exports = {
         "no-duplicate-imports": "error",
         "no-fallthrough": "error",
         "use-isnan": "error",
-        "arrow-body-style": ["error", "always"],
         "no-loss-of-precision": "error",
         "no-promise-executor-return": "error",
         // See "when not to use it", and check your use case, if you think this
@@ -81,7 +80,6 @@ module.exports = {
         "@typescript-eslint/no-for-in-array": "error",
         "@typescript-eslint/no-unsafe-call": "error",
         "@typescript-eslint/no-unsafe-return": "error",
-        "@typescript-eslint/no-unsafe-member-access": "error",
         "@typescript-eslint/no-var-requires": "error",
         "@typescript-eslint/restrict-plus-operands": "error",
       },
