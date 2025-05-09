@@ -32,6 +32,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
 import { combineLatest, map, startWith, tap } from 'rxjs';
+import { User } from '../../backend/src/types';
+import { StateService } from './state.service';
 
 const isDev = isDevMode();
 
@@ -64,6 +66,7 @@ export const StrongPasswordRegx: RegExp =
 })
 export class RegisterDialog {
   dialog = inject(MatDialog);
+  state = inject(StateService);
   passwordChecks = [
     {
       regexp: '^(?=.*[A-Z])',
@@ -163,9 +166,33 @@ export class RegisterDialog {
     });
   }
 
-  submit() {
+  async submit() {
     if (this.data.type === 'reset') {
       this.navigateToCode();
+    }
+
+    if (this.data.type === 'register') {
+      const user: Omit<User, 'sub'> = {
+        phone: this.phoneNumber.value!,
+        password: this.password.value!,
+        name: this.phoneNumber.value!,
+      };
+
+      const res = await fetch('http://localhost:3000/create-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
+
+      if(res.status === 201) {
+        this.login(user.phone, user.password);
+      }
+    }
+
+    if (this.data.type === 'login') {
+      this.login(this.phoneNumber.value!, this.password.value!);
     }
   }
 
@@ -178,5 +205,25 @@ export class RegisterDialog {
         type: 'code',
       },
     });
+  }
+
+  async login(phone: string, password: string) {
+    const res = await fetch('http://localhost:3000/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone, password }),
+    });
+
+    const json = await res.json();
+    console.log(json)
+
+    if(res.status === 200) {
+      const { user } = json;
+      this.state.user$.next(user);
+      this.dialogRef.close();
+      this.state.page$.next('dashboard');
+    }
   }
 }

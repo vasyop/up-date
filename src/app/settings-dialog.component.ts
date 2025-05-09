@@ -1,38 +1,27 @@
 import {
   Component,
   inject,
-  isDevMode,
-  model,
   ViewEncapsulation,
 } from '@angular/core';
 import { Inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatGridListModule } from '@angular/material/grid-list';
 import {
   MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
   MatDialogContent,
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
 import {
   FormControl,
-  FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  Validators,
 } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
-import { combineLatest, map, startWith, tap } from 'rxjs';
-import { DbService } from './db.service';
+import { StateService } from './state.service';
 
 @Component({
   templateUrl: './settings-dialog.component.html',
@@ -48,14 +37,13 @@ import { DbService } from './db.service';
     MatIconModule,
     MatDialogTitle,
     MatDialogContent,
-    MatDialogActions,
     CommonModule,
   ],
 })
 export class SettingsDialog {
   dialogRef = inject(MatDialogRef<SettingsDialog>);
-  db = inject(DbService);
-  initialName = this.db.user$.value.name;
+  state = inject(StateService);
+  initialName = this.state.user$.value?.name ?? '';
   name = new FormControl(this.initialName);
 
   constructor(
@@ -66,10 +54,12 @@ export class SettingsDialog {
   }
 
   close() {
-    if(!this.name.value) {
-      this.db.user$.next({... this.db.user$.value, name: this.initialName});
-    } else {
-      this.db.user$.next({... this.db.user$.value, name: this.name.value});
+    if(!this.state.user$.value) {
+      return;
+    }
+
+    if(this.name.value) {
+      this.state.user$.next({... this.state.user$.value, name: this.name.value});
     }
 
     this.dialogRef.close();

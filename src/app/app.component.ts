@@ -24,6 +24,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { DashboardComponent } from "./dashboard.component";
+import { StateService } from './state.service';
 
 @Component({
   selector: 'app-root',
@@ -53,8 +54,9 @@ import { DashboardComponent } from "./dashboard.component";
   encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent {
-  page$ = new BehaviorSubject<'regLog' | 'about' | 'dashboard'>('regLog');
   dialog = inject(MatDialog);
+  state = inject(StateService);
+  page$ = this.state.page$;
 
   ngAfterContentInit() {
     this.page$.subscribe(() => {
@@ -64,10 +66,6 @@ export class AppComponent {
     setTimeout(() => {
       this.initMap();
     }, 100);
-
-    setTimeout(() => {
-      this.page$.next('dashboard'); // TODO: remove this
-    }, 200);
   }
 
   openRegisterDialog(type: 'login' | 'register'): void {

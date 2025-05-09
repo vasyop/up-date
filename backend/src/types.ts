@@ -1,20 +1,19 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
+export type Permission = 'multiple-categories';
+export type Sub = 'user' | 'plus' | 'admin';
 
-type Permission = 'multiple-categories';
-type Sub = 'user' | 'plus' | 'admin';
+export type User = {
+  phone: string;
+  sub: Sub;
+  password: string;
+  name: string;
+};
 
 export const permissions: Record<Sub, Permission[]> = {
   user: [],
   plus: ['multiple-categories'],
   admin: ['multiple-categories'],
 };
-
-export interface User {
-  phone: string;
-  name: string;
-  sub: Sub;
-}
 
 export interface Questionnaire {
   id: string;
@@ -69,12 +68,6 @@ export type Answer = {
   uId: string; // user id (phone)
   qId: string; // question id
 } & (SelectAnswer | OrderAnswer);
-
-export const user1: User = {
-  phone: '0123456789',
-  name: 'Ana-Maria',
-  sub: 'admin',
-};
 
 export const questionnaire1: Questionnaire = {
   id: 'chestionar-1',
@@ -811,24 +804,3 @@ export const questionnaire1: Questionnaire = {
     },
   ],
 };
-
-@Injectable({
-  providedIn: 'root',
-})
-export class DbService {
-  // TODO: actually implement this
-  user$ = new BehaviorSubject(user1);
-  answers$ = new BehaviorSubject<Answer[]>([]);
-
-  questionnaires$ = new BehaviorSubject([questionnaire1]);
-
-  constructor() {
-    // TODO: this will surely break once the model changes
-    if (localStorage.getItem('answers')) {
-      this.answers$.next(JSON.parse(localStorage.getItem('answers')!));
-    }
-    this.answers$.subscribe((answers) => {
-      localStorage.setItem('answers', JSON.stringify(answers));
-    });
-  }
-}

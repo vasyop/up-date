@@ -1,4 +1,13 @@
-https://github.com/xddq/nodejs-typescript-modern-starter
-ngrok
+login/register test
+user name change req
+
+show error dialog if any request breaks
+
+main page horizontal scroll bug
+username at register
+prevent srv from crashing from bad input
+
+BE: https://github.com/xddq/nodejs-typescript-modern-starter
 backend
-TODOs
+ngrok
+actual security

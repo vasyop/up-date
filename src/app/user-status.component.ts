@@ -11,7 +11,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { SettingsDialog } from './settings-dialog.component';
-import { DbService } from './db.service';
+import { StateService } from './state.service';
 
 @Component({
   templateUrl: './user-status.component.html',
@@ -31,7 +31,7 @@ import { DbService } from './db.service';
 })
 export class UserStatusComponent {
   dialog = inject(MatDialog);
-  db = inject(DbService);
+  state = inject(StateService);
 
   openSettings() {
     this.dialog.open(SettingsDialog, {

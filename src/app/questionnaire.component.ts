@@ -5,11 +5,9 @@ import {
   SelectQuestion,
   OTHER_OPTION_ID,
   permissions,
-  user1,
-  DbService,
   Question,
   SelectAnswer,
-} from './db.service';
+} from '../../backend/src/types';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,6 +26,7 @@ import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
 import {CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
+import { StateService } from './state.service';
 
 @Component({
   selector: 'app-questionnaire',
@@ -58,7 +57,7 @@ import {CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/d
 export class QuestionnaireComponent {
   @Input() content!: IQuestionnaireContent;
 
-  db = inject(DbService);
+  state = inject(StateService);
   OTHER_OPTION_ID = OTHER_OPTION_ID;
 
   navQuestion(inc: number, current: IQuestionnaireContent) {
@@ -109,8 +108,13 @@ export class QuestionnaireComponent {
       return;
     }
 
-    const a = this.db.answers$.value.find(
-      (a) => a.type === 'select' && a.qId === q.id && a.oId === optId && a.uId === user1.phone
+    const userPhone = this.state.user$.value?.phone;
+    if(!userPhone) {
+      return;
+    }
+
+    const a = this.state.answers$.value.find(
+      (a) => a.type === 'select' && a.qId === q.id && a.oId === optId && a.uId === userPhone
     );
 
     if(a?.type === 'select') {
@@ -144,19 +148,24 @@ export class QuestionnaireComponent {
       return;
     }
 
-    const currentheckedOptionAnswer = (a: Answer) => a.type === 'select' && a.uId === user1.phone && a.qId === q.id && a.oId === oId
+    const userPhone = this.state.user$.value?.phone;
+    if(!userPhone) {
+      return;
+    }
+
+    const currentheckedOptionAnswer = (a: Answer) => a.type === 'select' && a.uId === userPhone && a.qId === q.id && a.oId === oId
 
     if(value === false) {
-      this.db.answers$.next(this.db.answers$.value.filter((a) => !currentheckedOptionAnswer(a)));
+      this.state.answers$.next(this.state.answers$.value.filter((a) => !currentheckedOptionAnswer(a)));
       return;
     }
 
     if (this.isAllowedMultipleChoiceAnswer(q)) {
-      this.db.answers$.next([
-        ...this.db.answers$.value.filter((a) => !currentheckedOptionAnswer(a)),
+      this.state.answers$.next([
+        ...this.state.answers$.value.filter((a) => !currentheckedOptionAnswer(a)),
         {
           type: 'select',
-          uId: user1.phone,
+          uId: userPhone,
           qId: q.id,
           oId,
           value,
@@ -164,11 +173,11 @@ export class QuestionnaireComponent {
       ]);
 
     } else {
-      this.db.answers$.next([
-        ...this.db.answers$.value.filter((a) => !(a.uId === user1.phone && a.qId === q.id)),
+      this.state.answers$.next([
+        ...this.state.answers$.value.filter((a) => !(a.uId === userPhone && a.qId === q.id)),
         {
           type: 'select',
-          uId: user1.phone,
+          uId: userPhone,
           qId: q.id,
           oId,
           value,
@@ -183,17 +192,22 @@ export class QuestionnaireComponent {
       return;
     }
 
+    const userPhone = this.state.user$.value?.phone;
+    if(!userPhone) {
+      return;
+    }
+
     const newOrder = this.currentOrder(q);
     moveItemInArray(newOrder, event.previousIndex, event.currentIndex);
 
-    const ans = this.db.answers$.value.find((a) => a.type === 'order' && a.uId === user1.phone && a.qId === q.id);
+    const ans = this.state.answers$.value.find((a) => a.type === 'order' && a.uId === userPhone && a.qId === q.id);
     if(ans?.type === 'order') {
       ans.order = newOrder;
-      this.db.answers$.next(this.db.answers$.value.filter((a) => a !== ans).concat([ans]));
+      this.state.answers$.next(this.state.answers$.value.filter((a) => a !== ans).concat([ans]));
     } else {
-      this.db.answers$.next(this.db.answers$.value.concat([{
+      this.state.answers$.next(this.state.answers$.value.concat([{
         type: 'order',
-        uId: user1.phone,
+        uId: userPhone,
         qId: q.id,
         order: newOrder,
       }]));
@@ -201,7 +215,7 @@ export class QuestionnaireComponent {
   }
 
   currentOrder(q: Question) {
-    const ans = this.db.answers$.value.find((a) => a.type === 'order' && a.uId === user1.phone && a.qId === q.id);
+    const ans = this.state.answers$.value.find((a) => a.type === 'order' && a.uId === this.state.user$.value?.phone && a.qId === q.id);
     return ans?.type === 'order' ? ans.order : q.options.map((o) => o.id);
   }
 
@@ -210,7 +224,7 @@ export class QuestionnaireComponent {
   }
 
   findFirstSelectAnswer(q: Question) {
-    const ans = this.db.answers$.value.find((a) => a.uId === user1.phone && a.qId === q.id)
+    const ans = this.state.answers$.value.find((a) => a.uId === this.state.user$.value?.phone && a.qId === q.id)
     if(ans?.type === 'select') {
       return ans;
     }
@@ -219,7 +233,7 @@ export class QuestionnaireComponent {
 
   isAllowedMultipleChoiceAnswer(q: SelectQuestion) {
     return !!q.multipleChoiceInfo?.multipleChoicePermissionsRequired?.every(
-      (p) => permissions[this.db.user$.value.sub].includes(p)
+      (p) => permissions[this.state.user$.value?.sub ?? 'user'].includes(p)
     );
   }
 

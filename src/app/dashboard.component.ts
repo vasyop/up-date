@@ -2,10 +2,9 @@ import { Component, inject } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  DbService,
   OTHER_OPTION_ID,
   Questionnaire,
-} from './db.service';
+} from '../../backend/src/types';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -25,6 +24,7 @@ import { SideSectionComponent } from './side-section.component';
 import { UserStatusComponent } from './user-status.component';
 import { CompatibilityComponent } from './compatibility.component';
 import { QuestionnaireComponent } from './questionnaire.component';
+import { StateService } from './state.service';
 
 enum SIDE_SECTION {
   QUESTIONAIRES = 'Chestionare',
@@ -78,9 +78,9 @@ export type ICompatibilityContent = {
 export class DashboardComponent {
   SIDE_SECTION = SIDE_SECTION;
   content$ = new BehaviorSubject<Content>(null);
-  db = inject(DbService);
+  state = inject(StateService);
 
-  questionnairesTitles$ = this.db.questionnaires$.pipe(
+  questionnairesTitles$ = this.state.questionnaires$.pipe(
     map((qs) => qs.map((q) => ({ title: q.title, id: q.id })))
   );
 
@@ -89,9 +89,9 @@ export class DashboardComponent {
   );
 
   constructor() {
-    setTimeout(() => {
-      this.handleLinkClick(SIDE_SECTION.QUESTIONAIRES, this.db.questionnaires$.value[0].id); // TODO: remove this
-    }, 100);
+    // setTimeout(() => {
+    //   this.handleLinkClick(SIDE_SECTION.QUESTIONAIRES, this.db.questionnaires$.value[0].id); // TODO: remove this
+    // }, 100);
   }
 
 
@@ -129,7 +129,7 @@ export class DashboardComponent {
         personName: comp.title,
       });
     } else if (section === SIDE_SECTION.QUESTIONAIRES) {
-      const q = this.db.questionnaires$.value.find((q) => q.id === linkId);
+      const q = this.state.questionnaires$.value.find((q) => q.id === linkId);
 
       if (!q) {
         return;
