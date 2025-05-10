@@ -26,7 +26,7 @@ app.use(cors());
 
       const existingUser = db.data.users.find((user) => user.phone === phone);
       if (existingUser) {
-        return res.status(400).json({ message: 'User already exists' });
+        return res.status(400).json({ message: 'Utilizatorul deja exista' });
       }
 
       await db.update((data) => data.users.push({ phone, password, name, sub: 'user' }));
@@ -45,7 +45,7 @@ app.use(cors());
       const user = db.data.users.find((user) => user.phone === phone && user.password === password);
 
       if (!user) {
-        return res.status(401).json({ message: 'Invalid credentials' });
+        return res.status(401).json({ message: 'Credentiale incorecte' });
       }
 
       res.status(200).json({ message: 'Login successful', user });

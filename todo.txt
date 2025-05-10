@@ -1,13 +1,19 @@
+reset pw
+login confirmation code flow (sms)
 login/register test
 user name change req
-
-show error dialog if any request breaks
-
 main page horizontal scroll bug
-username at register
+username at register form
 prevent srv from crashing from bad input
 
-BE: https://github.com/xddq/nodejs-typescript-modern-starter
-backend
 ngrok
+gpt/ai matchmaking
+payment for subscriptions
+video calls
 actual security
+
+ana:
+  Politica de confidențialitate
+  Termenii și condițiile
+
+BE: https://github.com/xddq/nodejs-typescript-modern-starter

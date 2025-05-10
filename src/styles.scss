@@ -31,6 +31,19 @@ $gutter: 20px;
 $ft-height: 600px + $gutter * 3;
 $bkp: 1850px;
 
+.error-snackbar.error-snackbar.error-snackbar {
+  margin-top: 50px;
+
+  .mat-mdc-simple-snack-bar {
+    .mat-mdc-snack-bar-label, .mat-mdc-snack-bar-action {
+      font-size: 18px;
+    }
+    padding: 20px;
+    max-width: none;
+    min-width: 300px;
+  }
+}
+
 app-root {
   height: 100%;
   display: block;

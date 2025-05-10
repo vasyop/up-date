@@ -188,6 +188,9 @@ export class RegisterDialog {
 
       if(res.status === 201) {
         this.login(user.phone, user.password);
+      } else {
+        const { message } = await res.json();
+        throw new Error(message);
       }
     }
 
@@ -224,6 +227,8 @@ export class RegisterDialog {
       this.state.user$.next(user);
       this.dialogRef.close();
       this.state.page$.next('dashboard');
+    } else {
+      throw new Error(json.message);
     }
   }
 }
